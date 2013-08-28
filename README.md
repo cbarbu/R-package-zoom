@@ -16,3 +16,9 @@ Download the zoom\*.tar.gz from the releases/ folder.
 ### development version
 You can always clone this repository, I'll assume you know what you are doing.
 
+Organization of the package
+---------------------------
+zoom is the normal package folder for R
+releases is the folder with official releases sources and binary for windows. 
+
+
