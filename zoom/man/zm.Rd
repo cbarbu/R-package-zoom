@@ -2,7 +2,7 @@
 \alias{zm}
 \title{Launch interaction on a plot}
 \usage{
-  zm(type = NULL, rp = NULL)
+  zm(type = "navigation", rp = NULL)
 }
 \arguments{
   \item{type}{the type of interaction with the plot.
