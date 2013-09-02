@@ -6,11 +6,14 @@ Date: 2013-08-22
 Author: Corentin M. Barbu
 Maintainer: Corentin M. Barbu <corentin.barbu@gmail.com>
 Description: zm(), called with any active plot allow to enter an interactive
-    session to zoom /navigate any plot. If it sounds awesome it's because it
+    session to zoom/navigate any plot. If it sounds awesome it's because it
     is.
+	The development version, as well as binary releases can be found at
+https://github.com/cbarbu/R-package-zoom
+
 License: LGPL
-Depends:
-    testthat,tools
+Suggests:
+    testthat
 Collate:
     'zoom-package.R'
     'zoom.R'
