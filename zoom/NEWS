@@ -1,0 +1,9 @@
+RELEASE HISTORY OF THE "zoom" PACKAGE
+=====================================
+
+Version 2.0.1 [2013-09-02]:
+- Add Windows/RStudio support.
+
+Version 2.0.0 [2013-08-31]:
+- Initial public release.
+
