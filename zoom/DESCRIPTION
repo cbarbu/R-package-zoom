@@ -1,16 +1,18 @@
 Package: zoom
 Type: Package
 Title: Allow to zoom/navigate in any plot.
-Version: 2.0
+Version: 2.0.1
 Date: 2013-08-22
-Author: Corentin M. Barbu
+Authors@R: c(person(c("Corentin", "M."), "Barbu", role=c("aut", "cre"),
+    email="corentin.barbu@gmail.com"),
+    person("Sebastian", "Gibb", role="ctb",
+    email="mail@sebastiangibb.de"))
 Maintainer: Corentin M. Barbu <corentin.barbu@gmail.com>
 Description: zm(), called with any active plot allow to enter an interactive
     session to zoom/navigate any plot. If it sounds awesome it's because it
     is.
-	The development version, as well as binary releases can be found at
-https://github.com/cbarbu/R-package-zoom
-
+    The development version, as well as binary releases can be found at
+https: //github.com/cbarbu/R-package-zoom
 License: LGPL
 Suggests:
     testthat
