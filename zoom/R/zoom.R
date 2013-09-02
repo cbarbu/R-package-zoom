@@ -55,7 +55,7 @@ is.plot.window<-function(alst,fn){
 }
 is.locator<-function(alst,fn){
   ## for former versions of R
-  ## beginning 3.0.1 
+  ## beginning 3.0.1
   version<-sessionInfo()$R.version
   Maj<-as.numeric(version$major)
   Min<-as.numeric(version$minor)
@@ -85,14 +85,14 @@ getalst<-function(tmp=recordPlot()[[1]]){
 
 
 #' Central low level function of the zoom package.
-#' 
+#'
 #' This function allow to replot the current or a saved plot with specific
 #' boundaries, magnification factor and possibly arround a user defined x/y.
-#' 
+#'
 #' This function is not necessarily easy to use by hand. It is designed to work
 #' well when called from higher level functions. End user should always use
 #' zm().
-#' 
+#'
 #' @param xlim A vector with min and max x
 #' @param ylim A vector with min and max y
 #' @param fact A scalar giving the magnification factor (>1 brings you closer)
@@ -108,12 +108,12 @@ getalst<-function(tmp=recordPlot()[[1]]){
 #' @seealso zm, in.zoom
 #' @keywords zoom plot
 #' @examples
-#' 
+#'
 #' plot(rnorm(1000),rnorm(1000))
 #' zoomplot.zoom(fact=2,x=0,y=0)
-#' 
+#'
 #' @export zoomplot.zoom
-zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,rp=NULL,x=NULL,y=NULL,...) 
+zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,rp=NULL,x=NULL,y=NULL,...)
 {
   # cat("using zoomplot.zoom")
 	# rp is a recorded plot
@@ -168,10 +168,10 @@ zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,rp=NULL,x=NULL,y=NUL
 
 
 #' @title Direct access to zoom functionalities.
-#' 
-#' @description Direct selection of a zoom method of the "session" type. 
+#'
+#' @description Direct selection of a zoom method of the "session" type.
 #' Possibly of use in scripts?
-#' 
+#'
 #' @aliases in.zoom out.zoom set.zoom sq.zoom
 #' @param \dots Extra arguments to zoomplot.zoom.
 #' @note Each function starts a different interactive sequence
@@ -305,14 +305,14 @@ session.zoom<-function(...){
 
 # Transform the button event code passed by the event handler into a
 # meaningful string.
-# 
+#
 # The event handler code returns a hard to understand code. I made a lot of
 # trials and errors and came up with the corresponding function to triage
 # these codes. This may evolve as I better understand this system.
-# 
+#
 # Used for all analysis of the events in navigation.zoom The returned values
 # should be self-explaining.
-# 
+#
 # @param buttons button event code as passed to event functions by
 # getGraphicsEvent()
 # @return The returned value is a string that can be:\itemize{
@@ -326,9 +326,9 @@ session.zoom<-function(...){
 # @seealso setCallBack
 # @keywords event
 # @examples
-# 
+#
 # labelButton(c(0,1)) # should return "right"
-# 
+#
 # @export labelButton
 labelButton<-function(buttons){
   # label the buttons with easy to remember names
@@ -400,15 +400,15 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
     mevent<-labelButton(buttons)
     if(mevent=="scrollDown"){
       zoomDyn(buttons,x,y)
-    }else if(mevent=="scrollUp"){ 
+    }else if(mevent=="scrollUp"){
       zoomDyn(buttons,x,y)
-    }else if(mevent=="middle"){ 
+    }else if(mevent=="middle"){
       # cat("Turn on zoomDyn\n")
       eventEnv$onMouseMove <- zoomDyn
-    }else if(mevent=="left"){ 
+    }else if(mevent=="left"){
       # cat("Turn on dragmousemove\n")
       eventEnv$onMouseMove <- dragmousemove
-    }else if(mevent=="right"){ 
+    }else if(mevent=="right"){
       # cat("Closing...")
       # return(invisible(1))
     }
@@ -418,7 +418,7 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
   mouseup <- function(buttons, x, y) {
     eventEnv$onMouseMove <- NULL
     NULL
-  }	
+  }
 
   #---------------------
   # Keyboard mode commuter
@@ -454,14 +454,14 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
 
 
 #' Opening of an interactive zoom/navigate session.
-#' 
+#'
 #' To launch an interactive session you should use zm() but if you are sure of
 #' your device you can launch directly one of these functions.
-#' 
+#'
 #' session.zoom launch an interactive console menu to navigate a plot.
-#' 
+#'
 #' navigation.zoom allows to interactively navigate a plot with the mouse.
-#' 
+#'
 #' @aliases navigation.zoom session.zoom
 #' @param \dots Everything that can be accepted by sq.zoom.
 #' @return Returns the final plot, as saved by recordPlot().
@@ -473,7 +473,7 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
 #' plot(rnorm(100),rnorm(100))
 #' session.zoom()
 #' }
-#' 
+#'
 #' @export navigation.zoom
 navigation.zoom<-function(...){
   cat("Scroll to zoom\nLeft click to move\n")
@@ -488,26 +488,26 @@ navigation.zoom<-function(...){
 
 
 # Zoom package utility functions
-# 
+#
 # Different functions, should not be used by end users, definitions may change
 # in future versions.
-# 
+#
 # This functions are more or less tightly connected to R internals functions
 # that are subject to a lot of changes and should not be relied on by a end
 # user.  In particular is.plot.windown() is responsible for the delicate task
 # of identifying in a recording of a plot to identify the part actually
 # responsible for plotting the graphic window. This single thing has changed
 # three times between 2010 and 2013.
-# 
+#
 # setCallBack() sets up the call handler. It should probably never be called
 # alone.
-# 
+#
 # keepanc, usenew and multipancPoint are three functions possibly called by
 # zoomplot.zoom() in an interchangeable way, none of them make use of all the
 # arguments.  keepanc() and usenew() return ancien or new according to their
 # names. multipancPoint() allows to transform "ancien" into new coordinates,
 # after magnification by "fact" (ignores "new") but keeping point invariant.
-# 
+#
 # @aliases XlibReplot getalst is.plot.window is.locator keepanc usenew
 # setCallBack orig.zoom multipancPoint
 # @param rp Saved plot as generated by recordPlot().
@@ -551,28 +551,28 @@ XlibReplot<-function(rp=NULL){
 # zm() Main function, choosing between navigation or old "session" interactions
 
 #' Launch interaction on a plot
-#' 
+#'
 #' Allow to zoom/navigate in any open plot. The controls should be intuitive:
-#' \itemize{ 
+#' \itemize{
 #'   \item{zoom in:}{ scroll up, or right click if no scrolling weel.}
-#'   \item{zoom out:}{ scroll down, or double click if no scrolling weel.} 
+#'   \item{zoom out:}{ scroll down, or double click if no scrolling weel.}
 #'   \item{move:}{ left click and move }
 #' }
-#' 
+#'
 #' By default, zm() try to open a mouse interactive session. If the current
 #' device is not interactive, will try to replot the current plot in a
 #' \code{X11(type="Xlib")} device. If it fails it will open a console menu
 #' based interactive session.
-#' 
+#'
 #' Zoom handle multiple plots on a device together. You need to navigate the
 #' last one plotted and all the other plots will be navigated according to the
 #' last one: that can be pretty amazing too if you want to explore multiple
 #' layers at the same time.
-#' 
+#'
 #' @param type the type of interaction with the plot. Possible types are:
-#' \itemize{ 
-#'    \item{session}{ for console menu} 
-#'    \item{navigation}{ for mouse interaction} 
+#' \itemize{
+#'    \item{session}{ for console menu}
+#'    \item{navigation}{ for mouse interaction}
 #' }
 #'
 #' Or any short names for these. By default will try to
@@ -585,23 +585,23 @@ XlibReplot<-function(rp=NULL){
 #' @note This function relies on pretty low level functions in R that change
 #' quite often with new versions. New version of R can break this package but I
 #' got used to it and fix it quickly.
-#' 
+#'
 #' In case you close the device before striking q, just hit Ctrl-C on the
 #' command line.
 #' @author Corentin M. Barbu
 #' @keywords zoom zm navigate navigation plot
 #' @examples
-#' 
+#'
 #' \dontrun{
 #' # basic example
 #' plot(rnorm(1000),rnorm(1000)) # could be any plot
 #' zm() # navigate the plot
-#' 
+#'
 #' # use the same xlim/ylim as ended up in the zoom session
 #' xylim<-par("usr") # xmin,xmax,ymin,ymax of the final version of the plot
 #' dev.off()
-#' plot(rnorm(1000),rnorm(1000),xlim=xylim[1:2],ylim=xylim[3:4]) 
-#' 
+#' plot(rnorm(1000),rnorm(1000),xlim=xylim[1:2],ylim=xylim[3:4])
+#'
 #' # navigate two layers of data at the same time
 #' par(mfrow=c(1,2))
 #' plot(1,type="n",xlim=c(-3,3),ylim=c(-3,3),main="First Track")
@@ -611,13 +611,13 @@ XlibReplot<-function(rp=NULL){
 #' polygon(c(-1,1,1,-1)*2,c(-1,-1,1,1)*2,col="green")
 #' lines(rnorm(100),rnorm(100))
 #' zm() # it flickers quite a bit as it needs to replot everything every time...
-#' 
+#'
 #' # one might want to use the older interface
 #' # if attached to cairo under linux or MacOS
 #' # it is also sometimes helpful to just define a square you want to zoom on
-#' zm(type="s") 
+#' zm(type="s")
 #' }
-#' 
+#'
 #' @export zm
 zm<-function(type=NULL,rp=NULL){
   if(is.null(type)){
@@ -646,7 +646,7 @@ zm<-function(type=NULL,rp=NULL){
     }
     return(out)
 }
-# need to check possibility to 
+# need to check possibility to
 # orig <- recordPlot()
 # X11(type = "Xlib")
 # replayPlot(orig)
@@ -665,7 +665,7 @@ zm<-function(type=NULL,rp=NULL){
 # plot(runif(1000))
 # abline(0,1)
 # original<-session.zoom()
-# 
+#
 # # and to go back to the original
 # replayPlot(original);
 
