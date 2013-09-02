@@ -161,7 +161,7 @@ zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,rp=NULL,x=NULL,y=NUL
 		}
 		plotOk<-try(do.call(fn, alst))
 	}
-	if(class(plotOk)=="try-error"){
+	if(isError(plotOk)){
 	   box() # finish the graph even if errors in between
 	}
 }
@@ -247,8 +247,7 @@ print.zoom<-function(orig=NULL,dev=NULL,fileName=NULL,...){
     fileName<-file.choose()
   }
   if(is.null(dev)){
-    test<-try(dev<-eval(parse(text=file_ext(fileName))),silent=TRUE)
-    if(class(test)=="try-error"){
+    if (isError(try(dev<-eval(parse(text=file_ext(fileName))), silent=TRUE))) {
       cat("Error: extension not recognized, try png or pdf\n")
       return(1)
     }
@@ -558,10 +557,10 @@ replot <- function(rp=NULL) {
   ## only needed for message output
   strCall <- paste0(what, "(", paste(names(args), args, sep="=", collapse=", "))
 
-  if (class(try(do.call(what, args), silent=TRUE)) != "try-error" &&
-      class(try(replayPlot(rp), silent=TRUE)) != "try-error") {
+  if (!isError(try(do.call(what, args), silent=TRUE)) &&
+      !isError(try(replayPlot(rp), silent=TRUE))) {
     message("Replot successful, use ", strCall, ") to avoid this step.")
-    return(class(try(setCallBack(),silent=TRUE)) != "try-error")
+    return(!isError(try(setCallBack(), silent=TRUE)))
   } else {
     if(dev.cur() != initDev) {
       dev.off()
@@ -646,7 +645,7 @@ replot <- function(rp=NULL) {
 zm <- function(type="navigation", rp=NULL) {
 
   if (missing(type)) {
-    if (class(try(setCallBack(), silent=TRUE)) == "try-error") {
+    if (isError(try(setCallBack(), silent=TRUE))) {
       if (replot(rp=rp)) {
         type <- "navigation"
       } else {
@@ -684,4 +683,3 @@ zm <- function(type="navigation", rp=NULL) {
 #
 # # and to go back to the original
 # replayPlot(original);
-

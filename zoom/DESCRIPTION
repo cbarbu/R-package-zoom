@@ -19,3 +19,4 @@ Suggests:
 Collate:
     'zoom-package.R'
     'zoom.R'
+    'utils.R'
