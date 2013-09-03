@@ -11,10 +11,10 @@
   simultanuously navigate all the plots.
 }
 \details{
-  Additionally, it allows to print on the fly the current
-  state and continue the navigation
+  Finally, it allows to print on the fly the current state
+  and continue the navigation
 
-  It fully works under Windows and Linux.
+  It fully works under Windows standard GUI and Linux.
 
   On Mac it fully works if launching R from the Xquartz
   terminal. It will default to the "session" mode if
@@ -22,6 +22,11 @@
   may have a bug with X11 fonts that prevents even the
   simplest plots to be displayed, it will not get any
   better with this package.
+
+  Rstudio: should work fine on windows after replot of the
+  graph in a native windows window. On Mac and linux it
+  should fallback to the less interactive session, allowing
+  to zoom in the Rstudio plotting region itself.
 
   See help(zm) for more details on how to use the package.
 

@@ -1,6 +1,8 @@
 export(in.zoom)
+export(inout.zoom)
 export(navigation.zoom)
 export(out.zoom)
+export(session.zoom)
 export(sq.zoom)
 export(zm)
 export(zoomplot.zoom)

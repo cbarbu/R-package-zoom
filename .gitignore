@@ -1,6 +1,8 @@
 # History files
 .Rhistory
-zoom.Rcheck
 
 # Example code in package build process
 *-Ex.R
+
+# checks folder
+zoom.Rcheck
