@@ -202,7 +202,7 @@ in.zoom<-function(...){
 out.zoom<-function(...){
   # Ideally later should center arround the point selected
   cat("Left click to zoom out\n")
-  cat("Right click for other options\n")
+  cat("Right click/Finish for other options\n")
   center<-locator(1)
   print(center)
   if(length(center$x)==1){
@@ -244,7 +244,8 @@ sq.zoom<-function(...){
 	# use locator to zoom with the mouse (two left clicks)
 	# specially, ... can be used to pass a recorded plot rp
 	cat("Click left over opposite corners of zoom area.\n");
-	cat("Click right for other options.\n")
+	cat("Double left click for zoom out\n")
+	cat("Right click/Finish for other options.\n")
 	square<-locator(2)
 	print(square)
 	if(length(square)==2){
