@@ -166,6 +166,18 @@ zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,rp=NULL,x=NULL,y=NUL
 	}
 }
 
+is.out.of.plot.click<-function(loc){
+	plotLim<-par("usr")
+
+	if(loc$x<min(plotLim[1:2])
+	|| loc$x>max(plotLim[1:2])
+	|| loc$y>max(plotLim[3:4])
+	|| loc$y<min(plotLim[3:4])){
+		return(TRUE)
+	}else{
+		return(FALSE)
+	}
+}
 
 #' @title Direct access to zoom functionalities.
 #'
@@ -194,6 +206,28 @@ in.zoom<-function(...){
   if(length(center$x)==1){
     zoomplot.zoom(fact=2,x=center$x,y=center$y,...);
     in.zoom()
+  }
+  return()
+}
+#' allow interactive in/out zoom in "session" mode
+#' @author Corentin M. Barbu
+#' @rdname in.zoom
+#' @export inout.zoom
+inout.zoom<-function(centerOld=NULL,...){
+  # Ideally later should center arround the point selected
+  cat("Left click in plot to zoom in\n")
+  cat("Left click out of plot to zoom out\n")
+  cat("Right click/Finish for other options\n")
+
+  center<-locator(1)
+  if(length(center$x)==1){
+	  if(is.out.of.plot.click(center)){
+		  zoomplot.zoom(fact=0.5,...);
+	  }else{
+		  zoomplot.zoom(fact=2,x=center$x,y=center$y,...);
+		  centerOld<-center
+	  }
+    inout.zoom(...)
   }
   return()
 }
@@ -295,7 +329,7 @@ pdf.zoom<-function(orig=NULL,fileName=NULL){
 session.zoom<-function(...){
 	orig <- recordPlot()
 	go_on<-TRUE
-	sq.zoom(...)
+	inout.zoom(...)
 	while(go_on){
 		cat("Do you want to?\n")
 		cat("     zoom in: 1\n")
