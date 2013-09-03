@@ -607,7 +607,7 @@ replot <- function(rp=NULL) {
       dev.off()
     }
     message("Fall back to classical interface.")
-    message("Use ", strCall, ") to enable navigation.")
+    message("Use ", deparse(cl), " to enable navigation.")
     return(FALSE)
   }
 }
