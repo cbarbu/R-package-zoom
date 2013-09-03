@@ -204,6 +204,7 @@ out.zoom<-function(...){
   cat("Left click to zoom out\n")
   cat("Right click for other options\n")
   center<-locator(1)
+  print(center)
   if(length(center$x)==1){
     zoomplot.zoom(fact=0.5,x=center$x,y=center$y,...);
     out.zoom()
@@ -219,6 +220,24 @@ set.zoom<-function(...){
 	return()
 }
 
+#' Double-click detection
+#' Test is the output of locator corresponds to two identical points
+is.double.click<-function(loc){
+	if(length(loc$x)!=2){
+		cat("1\n")
+		return(FALSE)
+	}else{
+		if(loc$x[1]==loc$x[2] && 
+		loc$y[1]==loc$y[2]){
+			return(TRUE)
+		}else{
+		cat("2\n")
+		print(loc)
+			return(FALSE)
+		}
+	}
+}
+
 #' @rdname in.zoom
 #' @export sq.zoom
 sq.zoom<-function(...){
@@ -227,12 +246,18 @@ sq.zoom<-function(...){
 	cat("Click left over opposite corners of zoom area.\n");
 	cat("Click right for other options.\n")
 	square<-locator(2)
+	print(square)
 	if(length(square)==2){
-	  xmin<-min(square$x)
-	  xmax<-max(square$x)
-	  ymin<-min(square$y)
-	  ymax<-max(square$y)
-	  zoomplot.zoom(xlim=c(xmin,xmax),ylim=c(ymin,ymax),...)
+	  if(is.double.click(square)){
+		zoomplot.zoom(fact=0.5,x=square$x,y=square$y,...);
+	  	out.zoom()
+	  }else{
+		  xmin<-min(square$x)
+		  xmax<-max(square$x)
+		  ymin<-min(square$y)
+		  ymax<-max(square$y)
+		  zoomplot.zoom(xlim=c(xmin,xmax),ylim=c(ymin,ymax),...)
+	  }
 	  sq.zoom(...)
 	}
 }
