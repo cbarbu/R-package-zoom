@@ -423,16 +423,46 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
   # Keyboard mode commuter
   #---------------------
 
-    keydown <- function(key) {
-    if (key == "q") return(invisible(1))
-    if (key == "p"){
-      cat("Entering printing mode:\n")
-      eventEnv$prompt <<- "Printing mode"
-      setGraphicsEventEnv(env=eventEnv)
-
-      print.zoom()
-    }
-    NULL
+  keydown <- function(key) {
+    switch(key,
+      ## quit (\033 == ESC)
+      "\033" =, "ctrl-C" =, "q" = { return(invisible(1)) },
+      ## print to file
+      "p" = {
+        message("Entering printing mode:")
+        eventEnv$prompt <<- "Printing mode"
+        setGraphicsEventEnv(env=eventEnv)
+        print.zoom()
+      },
+      ## show limits
+      "s" = { message("xlim=c(",
+                      paste0(round(.xlim(), digits=3), collapse=", "), "), ",
+                      "ylim=c(",
+                      paste0(round(.ylim(), digits=3), collapse=", "), ")") },
+      ## zoom in (ctrl-* == [CTRL]+[+])
+      "ctrl-*" =, "+" = { zoomplot.zoom(fact=1.1) },
+      ## zoom out (ctrl-_ == [CTRL]+[-])
+      "ctrl-_" =, "-" = { zoomplot.zoom(fact=0.9) },
+      ## zoom in (x-axis only)
+      "L" = { zoomplot.zoom(xlim=.zoomXlim(1.1)) },
+      ## zoom out (x-axis only)
+      "H" = { zoomplot.zoom(xlim=.zoomXlim(0.9)) },
+      ## zoom in (y-axis only)
+      "K" = { zoomplot.zoom(ylim=.zoomYlim(1.1)) },
+      ## zoom out (y-axis only)
+      "J" = { zoomplot.zoom(ylim=.zoomYlim(0.9)) },
+      ## move left
+      "Left" =, "h" = { zoomplot.zoom(xlim=.moveXlim(-0.1)) },
+      ## move right
+      "Right" =, "l" = { zoomplot.zoom(xlim=.moveXlim(+0.1)) },
+      ## move down
+      "Down" =, "j" = { zoomplot.zoom(ylim=.moveYlim(-0.1)) },
+      ## move up
+      "Up" =, "k" = { zoomplot.zoom(ylim=.moveYlim(+0.1)) },
+      ## default (nothing)
+      {}
+    )
+    return(NULL)
   }
 
   #---------------------
@@ -475,6 +505,7 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
 #'
 #' @export navigation.zoom
 navigation.zoom<-function(...){
+  message("Mouse:")
   if (.Platform$OS.type == "windows") {
     message("Hold left mouse button to move.\n",
             "Right click to zoom in.\n",
@@ -482,6 +513,20 @@ navigation.zoom<-function(...){
   } else {
     message("Scroll to zoom\nLeft click to move")
   }
+
+  message("\nKeyboard:")
+  ## keyboard usage
+  keys <- c("Left/Right (h/l)", "Up/Down (k/j)",
+            "CTRL++/CTRL+-", "L/H", "K/J",
+            "p", "s")
+  usage <- c("move left/right", "move up/down",
+             "zoom in/out", "zoom in/out (x-axis only)",
+             "zoom in/out (y-axis only)",
+             "print to file", "show limits")
+  message(paste(format(keys, justify="left"),
+                format(usage, justify="right"),
+                sep=": ", collapse="\n"))
+
   g<-0
   while(length(g)!=1 || g!=1){
     g<-getGraphicsEvent(consolePrompt="q on the graphic window to quit")
