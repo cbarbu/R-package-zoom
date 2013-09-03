@@ -188,6 +188,7 @@ is.out.of.plot.click<-function(loc){
 #' @param \dots Extra arguments to zoomplot.zoom.
 #' @note Each function starts a different interactive sequence
 #'  	\itemize{
+#' 	 	\item{inout.zoom(): }{left click within bounds zooms in, outside bounds zoom out}
 #' 	 	\item{in.zoom(): }{each left click zooms in}
 #' 	 	\item{out.zoom(): }{each left click zooms out}
 #' 	 	\item{set.zoom(): }{ask for a magnification factor}
@@ -210,10 +211,9 @@ in.zoom<-function(...){
   return()
 }
 #' allow interactive in/out zoom in "session" mode
-#' @author Corentin M. Barbu
 #' @rdname in.zoom
 #' @export inout.zoom
-inout.zoom<-function(centerOld=NULL,...){
+inout.zoom<-function(...){
   # Ideally later should center arround the point selected
   cat("Left click in plot to zoom in\n")
   cat("Left click out of plot to zoom out\n")
@@ -225,7 +225,6 @@ inout.zoom<-function(centerOld=NULL,...){
 		  zoomplot.zoom(fact=0.5,...);
 	  }else{
 		  zoomplot.zoom(fact=2,x=center$x,y=center$y,...);
-		  centerOld<-center
 	  }
     inout.zoom(...)
   }
@@ -254,8 +253,8 @@ set.zoom<-function(...){
 	return()
 }
 
-#' Double-click detection
-#' Test is the output of locator corresponds to two identical points
+# Double-click detection
+# Test is the output of locator corresponds to two identical points
 is.double.click<-function(loc){
 	if(length(loc$x)!=2){
 		cat("1\n")
@@ -326,6 +325,8 @@ pdf.zoom<-function(orig=NULL,fileName=NULL){
   print.zoom(dev=pdf)
 }
 
+#' @rdname navigation.zoom
+#' @export session.zoom
 session.zoom<-function(...){
 	orig <- recordPlot()
 	go_on<-TRUE
