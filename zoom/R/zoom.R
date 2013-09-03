@@ -424,7 +424,7 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
   #---------------------
 
     keydown <- function(key) {
-    if (key == "q") return(invisible(1))
+    if (key == "q" || key == "Esc") return(invisible(1))
     if (key == "p"){
       cat("Entering printing mode:\n")
       eventEnv$prompt <<- "Printing mode"
@@ -475,13 +475,13 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
 #'
 #' @export navigation.zoom
 navigation.zoom<-function(...){
-  if (.Platform$OS.type == "windows") {
-    message("Hold left mouse button to move.\n",
-            "Right click to zoom in.\n",
-            "Hold left + click right to zoom out.")
-  } else {
-    message("Scroll to zoom\nLeft click to move")
-  }
+  # if (.Platform$OS.type == "windows") {
+  #   message("Hold left mouse button to move.\n",
+  #           "Right click to zoom in.\n",
+  #           "Hold left + click right to zoom out.")
+  # } else {
+    message("Scroll to zoom in and out\nHold left mouse button to move")
+  # }
   g<-0
   while(length(g)!=1 || g!=1){
     g<-getGraphicsEvent(consolePrompt="q on the graphic window to quit")
@@ -555,7 +555,7 @@ replot <- function(rp=NULL) {
   }
 
   ## only needed for message output
-  strCall <- paste0(what, "(", paste(names(args), args, sep="=", collapse=", "))
+  strCall <- paste0(what, "(", paste(names(args), args, sep="=", collapse=", "),")")
 
   if (!isError(try(do.call(what, args), silent=TRUE)) &&
       !isError(try(replayPlot(rp), silent=TRUE))) {
