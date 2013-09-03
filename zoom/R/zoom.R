@@ -592,19 +592,14 @@ replot <- function(rp=NULL) {
 
   ## choose correct device for each supported platform
   if (.Platform$OS.type == "windows") {
-    what <- "windows"
-    args <- list()
+    cl <- call("windows")
   } else {
-    what <- "X11"
-    args <- list(type="Xlib")
+    cl <- call("X11", type="Xlib")
   }
 
-  ## only needed for message output
-  strCall <- paste0(what, "(", paste(names(args), args, sep="=", collapse=", "))
-
-  if (!isError(try(do.call(what, args), silent=TRUE)) &&
+  if (!isError(try(eval(cl), silent=TRUE)) &&
       !isError(try(replayPlot(rp), silent=TRUE))) {
-    message("Replot successful, use ", strCall, ") to avoid this step.")
+    message("Replot successful, use ", deparse(cl), " to avoid this step.")
     return(!isError(try(setCallBack(), silent=TRUE)))
   } else {
     if(dev.cur() != initDev) {
