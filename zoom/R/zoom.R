@@ -247,7 +247,8 @@ print.zoom<-function(orig=NULL,dev=NULL,fileName=NULL,...){
     fileName<-file.choose()
   }
   if(is.null(dev)){
-    if (isError(try(dev<-eval(parse(text=file_ext(fileName))), silent=TRUE))) {
+    if (isError(try(dev<-eval(parse(text=tools:::file_ext(fileName))),
+                    silent=TRUE))) {
       cat("Error: extension not recognized, try png or pdf\n")
       return(1)
     }
