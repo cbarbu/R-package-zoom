@@ -356,6 +356,7 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
   startx <- NULL
   starty <- NULL
   usr <- NULL
+  rp <- recordPlot()
 
   #---------------------
   # Navigation functions
@@ -441,6 +442,8 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
                       "ylim=c(",
                       paste0(round(.ylim(), digits=3), collapse=", "), ")") },
       ## zoom in (ctrl-* == [CTRL]+[+])
+      "r" = { orig.zoom(rp) },
+      ## zoom in (ctrl-* == [CTRL]+[+])
       "ctrl-*" =, "+" = { zoomplot.zoom(fact=1.1) },
       ## zoom out (ctrl-_ == [CTRL]+[-])
       "ctrl-_" =, "-" = { zoomplot.zoom(fact=0.9) },
@@ -519,11 +522,11 @@ navigation.zoom<-function(...){
   ## keyboard usage
   keys <- c("Left/Right (h/l)", "Up/Down (k/j)",
             "CTRL++/CTRL+-", "L/H", "K/J",
-            "p", "s")
+            "p", "r", "s")
   usage <- c("move left/right", "move up/down",
              "zoom in/out", "zoom in/out (x-axis only)",
              "zoom in/out (y-axis only)",
-             "print to file", "show limits")
+             "print to file", "reset limits", "show limits")
   message(paste(format(keys, justify="left"),
                 format(usage, justify="right"),
                 sep=": ", collapse="\n"))
