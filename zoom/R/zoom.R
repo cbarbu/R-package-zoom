@@ -198,7 +198,8 @@ other.option.session.message<-function(){
   terminate.key<-switch(devType,
 	 X11 = "Any other click",
 	 quartz = "Hit Esc",
-	 RStudioGD = "Click on Finish")
+	 RStudioGD = "Click on Finish",
+  	 window = "Middle click")
 
   cat(terminate.key,"for other options.\n")
 }
