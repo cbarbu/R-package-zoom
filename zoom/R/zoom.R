@@ -199,7 +199,7 @@ other.option.session.message<-function(){
 	 X11 = "Any other click",
 	 quartz = "Hit Esc",
 	 RStudioGD = "Click on Finish",
-  	 window = "Middle click","Terminate as in locator()")
+  	 windows = "Middle click","Terminate as in locator()")
 
   cat(terminate.key,"for other options.\n")
 }
@@ -434,22 +434,26 @@ session.zoom<-function(...){
 labelButton<-function(buttons){
   # label the buttons with easy to remember names
   label<-""
-# cat("buttons:")
-# print(buttons)
+  # cat("buttons:")
+  # print(buttons)
   if(length(buttons)>=2){ # rightbutton or scrolling
     if(buttons[2]==2){ # scroll down
       label<-"scrollDown"
     }else if(buttons[2]==1){ # right button
       label<-"right"
     }
-  }else if(buttons==1){ # middle button
+  }else if(length(buttons)==1){
+    if(buttons==1){ # middle button
       label<-"middle"
-  }else if(buttons==0){
+    }else if(buttons==0){
       label<-"left"
-  }else if(buttons==2){# scroll up
+    }else if(buttons==2){# scroll up
       label<-"scrollUp"
+    }
+  }else{
+    label<-NULL
   }
-  # cat("mevent:",label,"\n")
+  # cat("label:",label,"\n")
   return(label)
 }
 
@@ -475,21 +479,24 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
     devset()
     usr <<- par("usr")
     mevent<-labelButton(buttons)
-    if(mevent=="scrollDown"){
-      fact<-0.7
-    }else if(mevent=="scrollUp"){
-      fact<-1.5
-    }else {
-      deltay <- diff(grconvertY(c(starty, y), "ndc", "user"))
-      fact<-max(min(1+deltay/(usr[2]-usr[1]),10),0.1)
-    }
-    xuser<-grconvertX(x, "ndc", "user")
-    yuser<-grconvertY(y, "ndc", "user")
+    if(!is.null(mevent)){
+      # cat("mevent:",mevent,"\n")
+      if(mevent=="scrollDown" || mevent=="middle"){
+	fact<-0.7
+      }else if(mevent=="scrollUp" || mevent == right){
+	fact<-1.5
+      }else {
+	deltay <- diff(grconvertY(c(starty, y), "ndc", "user"))
+	fact<-max(min(1+deltay/(usr[2]-usr[1]),10),0.1)
+      }
+      xuser<-grconvertX(x, "ndc", "user")
+      yuser<-grconvertY(y, "ndc", "user")
 
-    zoomplot.zoom(fact=fact,x=xuser,y=yuser)
-    # cat("fact:",fact,"\n")
-    # cat(usr[1:2],"->",xlim,"\n")
-    # cat(usr[3:4],"->",ylim,"\n")
+      zoomplot.zoom(fact=fact,x=xuser,y=yuser)
+      # cat("fact:",fact,"\n")
+      # cat(usr[1:2],"->",xlim,"\n")
+      # cat(usr[3:4],"->",ylim,"\n")
+    }
     NULL
   }
   mouseDownNavig <- function(buttons, x, y) {
@@ -500,12 +507,15 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
     # cat("buttonPress:",buttons,"\n")
     mevent<-labelButton(buttons)
     if(mevent=="scrollDown"){
+      eventEnv$onMouseMove <- zoomDyn
       zoomDyn(buttons,x,y)
     }else if(mevent=="scrollUp"){
+      eventEnv$onMouseMove <- zoomDyn
       zoomDyn(buttons,x,y)
     }else if(mevent=="middle"){
-      # cat("Turn on zoomDyn\n")
       eventEnv$onMouseMove <- zoomDyn
+      zoomDyn(buttons,x,y)
+      # cat("Turn on zoomDyn\n")
     }else if(mevent=="left"){
       # cat("Turn on dragmousemove\n")
       eventEnv$onMouseMove <- dragmousemove
@@ -577,12 +587,13 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
 #'
 #' @export navigation.zoom
 navigation.zoom<-function(...){
-  # if (.Platform$OS.type == "windows") {
-  #   message("Hold left mouse button to move.\n",
-  #           "Right click to zoom in.\n",
-  #           "Hold left + click right to zoom out.")
-  # } else {
-    message("Scroll to zoom in and out\nHold left mouse button to move")
+  if(names(dev.cur())=="windows"){
+    zoom.in.out.mes<-"Right to zoom in, Middle or Hold Left + click right to zoom out"
+  }else{
+    zoom.in.out.mes<-"Scroll to zoom in and out"
+  }
+
+  message(zoom.in.out.mes,"\nHold left mouse button to move")
   # }
   g<-0
   while(length(g)!=1 || g!=1){
