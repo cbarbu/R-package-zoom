@@ -91,8 +91,6 @@ getalst<-function(tmp=recordPlot()[[1]]){
 	return(alstwin);
 }
 
-
-
 #' Central low level function of the zoom package.
 #'
 #' This function allow to replot the current or a saved plot with specific
@@ -196,7 +194,13 @@ is.out.of.plot.click<-function(loc){
 }
 # to avoid repeating this painful piece
 other.option.session.message<-function(){
-  cat("Terminate (as using locator()) for other options.\n")
+  devType<-names(dev.cur())
+  terminate.key<-switch(devType,
+	 X11 = "Any other click",
+	 quartz = "Hit Esc",
+	 RStudioGD = "Click on Finish")
+
+  cat(terminate.key,"for other options.\n")
 }
 
 #' @title Direct access to zoom functionalities.
@@ -209,6 +213,7 @@ other.option.session.message<-function(){
 #' @note Each function starts a different interactive sequence
 #'  	\itemize{
 #' 	 	\item{inout.zoom(): }{left click within bounds zooms in, outside bounds zoom out}
+#' 	 	\item{move.to.click.zoom(): }{center plot arround left click}
 #' 	 	\item{in.zoom(): }{each left click zooms in}
 #' 	 	\item{out.zoom(): }{each left click zooms out}
 #' 	 	\item{set.zoom(): }{ask for a magnification factor}
