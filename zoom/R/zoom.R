@@ -302,7 +302,7 @@ is.double.click<-function(loc){
 		cat("1\n")
 		return(FALSE)
 	}else{
-		if(loc$x[1]==loc$x[2] && 
+		if(loc$x[1]==loc$x[2] &&
 		loc$y[1]==loc$y[2]){
 			return(TRUE)
 		}else{
@@ -348,7 +348,8 @@ print.zoom<-function(orig=NULL,dev=NULL,fileName=NULL,...){
     fileName<-file.choose()
   }
   if(is.null(dev)){
-    if (isError(try(dev<-eval(parse(text=file_ext(fileName))), silent=TRUE))) {
+    if (isError(try(dev<-eval(parse(text=tools:::file_ext(fileName))),
+                    silent=TRUE))) {
       cat("Error: extension not recognized, try png or pdf\n")
       return(1)
     }
@@ -461,6 +462,7 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
   startx <- NULL
   starty <- NULL
   usr <- NULL
+  rp <- recordPlot()
 
   #---------------------
   # Navigation functions
@@ -535,16 +537,48 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
   # Keyboard mode commuter
   #---------------------
 
-    keydown <- function(key) {
-    if (key == "q" || key == "Esc") return(invisible(1))
-    if (key == "p"){
-      cat("Entering printing mode:\n")
-      eventEnv$prompt <<- "Printing mode"
-      setGraphicsEventEnv(env=eventEnv)
-
-      print.zoom()
-    }
-    NULL
+  keydown <- function(key) {
+    switch(key,
+      ## quit (\033 == ESC)
+      "\033" =, "ctrl-C" =, "q" = { return(invisible(1)) },
+      ## print to file
+      "p" = {
+        message("Entering printing mode:")
+        eventEnv$prompt <<- "Printing mode"
+        setGraphicsEventEnv(env=eventEnv)
+        print.zoom()
+      },
+      ## show limits
+      "s" = { message("xlim=c(",
+                      paste0(round(.xlim(), digits=3), collapse=", "), "), ",
+                      "ylim=c(",
+                      paste0(round(.ylim(), digits=3), collapse=", "), ")") },
+      ## zoom in (ctrl-* == [CTRL]+[+])
+      "r" = { orig.zoom(rp) },
+      ## zoom in (ctrl-* == [CTRL]+[+])
+      "ctrl-*" =, "+" = { zoomplot.zoom(fact=1.1) },
+      ## zoom out (ctrl-_ == [CTRL]+[-])
+      "ctrl-_" =, "-" = { zoomplot.zoom(fact=0.9) },
+      ## zoom in (x-axis only)
+      "L" = { zoomplot.zoom(xlim=.zoomXlim(1.1)) },
+      ## zoom out (x-axis only)
+      "H" = { zoomplot.zoom(xlim=.zoomXlim(0.9)) },
+      ## zoom in (y-axis only)
+      "K" = { zoomplot.zoom(ylim=.zoomYlim(1.1)) },
+      ## zoom out (y-axis only)
+      "J" = { zoomplot.zoom(ylim=.zoomYlim(0.9)) },
+      ## move left
+      "Left" =, "h" = { zoomplot.zoom(xlim=.moveXlim(-0.1)) },
+      ## move right
+      "Right" =, "l" = { zoomplot.zoom(xlim=.moveXlim(+0.1)) },
+      ## move down
+      "Down" =, "j" = { zoomplot.zoom(ylim=.moveYlim(-0.1)) },
+      ## move up
+      "Up" =, "k" = { zoomplot.zoom(ylim=.moveYlim(+0.1)) },
+      ## default (nothing)
+      {}
+    )
+    return(NULL)
   }
 
   #---------------------
@@ -587,14 +621,28 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
 #'
 #' @export navigation.zoom
 navigation.zoom<-function(...){
+  message("Mouse:")
+
   if(names(dev.cur())=="windows"){
     zoom.in.out.mes<-"Right to zoom in, Middle or Hold Left + click right to zoom out"
   }else{
     zoom.in.out.mes<-"Scroll to zoom in and out"
   }
-
   message(zoom.in.out.mes,"\nHold left mouse button to move")
-  # }
+
+  message("\nKeyboard:")
+  ## keyboard usage
+  keys <- c("Left/Right (h/l)", "Up/Down (k/j)",
+            "CTRL++/CTRL+-", "L/H", "K/J",
+            "p", "r", "s")
+  usage <- c("move left/right", "move up/down",
+             "zoom in/out", "zoom in/out (x-axis only)",
+             "zoom in/out (y-axis only)",
+             "print to file", "reset limits", "show limits")
+  message(paste(format(keys, justify="left"),
+                format(usage, justify="right"),
+                sep=": ", collapse="\n"))
+
   g<-0
   while(length(g)!=1 || g!=1){
     g<-getGraphicsEvent(consolePrompt="q on the graphic window to quit")
@@ -660,26 +708,21 @@ replot <- function(rp=NULL) {
 
   ## choose correct device for each supported platform
   if (.Platform$OS.type == "windows") {
-    what <- "windows"
-    args <- list()
+    cl <- call("windows")
   } else {
-    what <- "X11"
-    args <- list(type="Xlib")
+    cl <- call("X11", type="Xlib")
   }
 
-  ## only needed for message output
-  strCall <- paste0(what, "(", paste(names(args), args, sep="=", collapse=", "),")")
-
-  if (!isError(try(do.call(what, args), silent=TRUE)) &&
+  if (!isError(try(eval(cl), silent=TRUE)) &&
       !isError(try(replayPlot(rp), silent=TRUE))) {
-    message("Replot successful, use ", strCall, ") to avoid this step.")
+    message("Replot successful, use ", deparse(cl), " to avoid this step.")
     return(!isError(try(setCallBack(), silent=TRUE)))
   } else {
     if(dev.cur() != initDev) {
       dev.off()
     }
     message("Fall back to classical interface.")
-    message("Use ", strCall, ") to enable navigation.")
+    message("Use ", deparse(cl), " to enable navigation.")
     return(FALSE)
   }
 }
