@@ -178,6 +178,10 @@ is.out.of.plot.click<-function(loc){
 		return(FALSE)
 	}
 }
+# to avoid repeating this painful piece
+other.option.session.message<-function(){
+  cat("Terminate (as in locator()) for other options\n")
+}
 
 #' @title Direct access to zoom functionalities.
 #'
@@ -201,7 +205,7 @@ is.out.of.plot.click<-function(loc){
 in.zoom<-function(...){
   # Ideally later should center arround the point selected
   cat("Left click to zoom in\n")
-  cat("Right click for other options\n")
+  other.option.session.message()
 
   center<-locator(1)
   if(length(center$x)==1){
@@ -210,6 +214,7 @@ in.zoom<-function(...){
   }
   return()
 }
+
 #' allow interactive in/out zoom in "session" mode
 #' @rdname in.zoom
 #' @export inout.zoom
@@ -217,7 +222,7 @@ inout.zoom<-function(...){
   # Ideally later should center arround the point selected
   cat("Left click in plot to zoom in\n")
   cat("Left click out of plot to zoom out\n")
-  cat("Right click/Finish for other options\n")
+  other.option.session.message()
 
   center<-locator(1)
   if(length(center$x)==1){
@@ -235,7 +240,8 @@ inout.zoom<-function(...){
 out.zoom<-function(...){
   # Ideally later should center arround the point selected
   cat("Left click to zoom out\n")
-  cat("Right click/Finish for other options\n")
+  other.option.session.message()
+
   center<-locator(1)
   print(center)
   if(length(center$x)==1){
@@ -278,7 +284,7 @@ sq.zoom<-function(...){
 	# specially, ... can be used to pass a recorded plot rp
 	cat("Click left over opposite corners of zoom area.\n");
 	cat("Double left click for zoom out\n")
-	cat("Right click/Finish for other options.\n")
+	other.option.session.message()
 	square<-locator(2)
 	print(square)
 	if(length(square)==2){
