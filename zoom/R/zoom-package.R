@@ -3,8 +3,8 @@
 #' Zoom/navigate any plot directly in R.
 #' 
 #' The single zm() function allows to launch an interactive viewing session
-#' with any plot. You can zoom in and out and move the scope (just as in Google
-#' maps). Additionally, if a device contains several plots it will
+#' with any plot. You can zoom in and out and move the scope. 
+#' Additionally, if a device contains several plots it will
 #' simultanuously navigate all the plots.
 #' 
 #' Finally, it allows to print on the fly the current state
@@ -19,41 +19,33 @@
 #' package.
 #' 
 #' Rstudio: should work fine on windows after replot of the graph 
-#' in a native windows window. On Mac and linux it should fallback 
-#' to the less interactive session, allowing to zoom in the Rstudio plotting
-#' region itself.
+#' in a native windows window. On Mac and linux it may fallback 
+#' to the less interactive session, allowing to zoom/navigate the Rstudio plotting
+#' region itself, you can always use X11(type="Xlib") before plotting if you really want the most interactive version.
 #' 
 #' See help(zm) for more details on how to use the package.
 #' 
 #' \tabular{ll}{ Package: \tab zoom\cr Type: \tab Package\cr Version: \tab
-#' 2.0\cr Date: \tab 2013-08-22\cr License: \tab LGPL\cr } The only function
+#' 2.0.2\cr Date: \tab 2013-09-05\cr License: \tab LGPL\cr } The only function
 #' end users should ever use is zm(). It orchestrate the access to other
 #' functions like: \itemize{ 
 #' \item{navigation.zoom(): }{launch a mouse interaction}
 #' \item{session.zoom(): }{launch a console menu interaction } 
-#' }
-#' Themselves orchestrating lower level functions: 
-#' \itemize{ 
-#' \item{in.zoom(): }{zoom in}
-#' \item{out.zoom(): }{zoom out}
-#' \item{set.zoom(): }{zoom to a magnification factor}
-#' \item{sq.zoom(): }{zoom on a user defined square}
-#' \item{zoomplot.zoom(): }{the heart function reploting everything as directed by higher level functions. }
+#' Themselves orchestrating lower level functions (see in.zoom and zoomplot.session help).
 #' }
 #' 
 #' @name zoom-package
 #' @aliases zoom-package zoom
 #' @docType package
-#' @note This package has its own git repository:
+#' @note This package is maintained as a git repository:
 #' github: https://github.com/cbarbu/R-package-zoom
 #' 
 #' Bug reports/suggestions/patches can be directly submitted in this web
 #' interface.
 #' 
 #' Known issues: \itemize{
-#' \item{print to pdf:}{ in navigation mode, print of a pdf generates 
-#'   a weird pdf. Exiting and printing using print.zoom() or 
-#'   simply dev.print() works fine.}
+#' \item{print to pdf:}{ in navigation mode, print a pdf generates 
+#'   a weird pdf. Exiting and printing using dev.print() works fine.}
 #' }
 #' @author Corentin M. Barbu
 #' 

@@ -419,7 +419,7 @@ session.zoom<-function(...){
 # @return The returned value is a string that can be:\itemize{
 # \item{left }{left button of the mouse}
 # \item{right }{right button of the mouse}
-# \item{middle }{middle button or scrolling will *pressed*}
+# \item{middle }{middle button or scrolling weel *pressed*}
 # \item{scrollDown }{scrolling weel turned down}
 # \item{scrollUp }{scrolling weel turned up}
 # }
@@ -483,7 +483,7 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
       # cat("mevent:",mevent,"\n")
       if(mevent=="scrollDown" || mevent=="middle"){
 	fact<-0.7
-      }else if(mevent=="scrollUp" || mevent == right){
+      }else if(mevent=="scrollUp" || mevent == "right"){
 	fact<-1.5
       }else {
 	deltay <- diff(grconvertY(c(starty, y), "ndc", "user"))
@@ -691,7 +691,7 @@ replot <- function(rp=NULL) {
 #' Allow to zoom/navigate in any open plot. The controls should be intuitive:
 #' \itemize{
 #'   \item{zoom in:}{ scroll up, or right click if no scrolling weel.}
-#'   \item{zoom out:}{ scroll down, or double click if no scrolling weel.}
+#'   \item{zoom out:}{ scroll down, or Hold left + right click if no scrolling weel, or scrolling weel doesn't work.}
 #'   \item{move:}{ left click and move }
 #' }
 #'
