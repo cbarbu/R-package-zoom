@@ -22,6 +22,15 @@ multipancPoint<-function(ancien,fact=1,new,point=NULL){
 
 	return(newRange);
 }
+centerOnPoint<-function(ancien,fact=1,new,point=NULL){
+  	currentCenter<-mean(ancien)
+	if(is.null(point)) point<-currentCenter
+	fact<-1/fact
+	newRange<- fact*ancien-currentCenter+point
+
+	return(newRange);
+}
+
 keepanc<-function(ancien,fact,new,point=NULL){
 	# cat("ancien",ancien,"fact",fact,"new:\n")
 	# print(new)
@@ -82,8 +91,6 @@ getalst<-function(tmp=recordPlot()[[1]]){
 	return(alstwin);
 }
 
-
-
 #' Central low level function of the zoom package.
 #'
 #' This function allow to replot the current or a saved plot with specific
@@ -100,6 +107,8 @@ getalst<-function(tmp=recordPlot()[[1]]){
 #' corresponding warnings in ?recordPlot.
 #' @param x x of a fix point when rescaling, by default the center.
 #' @param y y of a fix point when rescaling, by default the center.
+#' @param xlimfn a function using x, y and/or fact to generate new x lim if NULL and xlim/ylim not given will use multipancPoint
+#' @param ylimfn a function using x, y and/or fact to generate new y lim, if NULL will use xlimfn
 #' @param \dots Additional parameters not implemented, just in case.
 #' @return Not guaranted for now.
 #' @note This function is the heart of the zoom package and the one that can be
@@ -113,59 +122,87 @@ getalst<-function(tmp=recordPlot()[[1]]){
 #' zoomplot.zoom(fact=2,x=0,y=0)
 #'
 #' @export zoomplot.zoom
-zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,rp=NULL,x=NULL,y=NULL,...)
+zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,rp=NULL,x=NULL,y=NULL,xlimfn=NULL,ylimfn=NULL,...)
 {
   # cat("using zoomplot.zoom")
-	# rp is a recorded plot
-	# fact is a factor of magnification/outzoom
-	# fact has priority on xlim/ylim
-	if(! is.null(fact)&& is.numeric(fact) && length(fact)==1){
-		xlimfn <-multipancPoint;
-		ylimfn <-multipancPoint;
-	}else{
-		if(!is.null(xlim)&& is.numeric(xlim) && length(xlim)==2){
-			xlimfn <- usenew;
-		}else{
-			xlimfn <-keepanc;
-		}
-		if(!is.null(ylim) && is.numeric(ylim) && length(ylim)==2){
-			ylimfn <-usenew;
-		}else{
-			ylimfn <-keepanc;
-		}
-	}
+  # rp is a recorded plot
+  # fact is a factor of magnification/outzoom
+  # fact has priority on xlim/ylim
+  if(is.null(xlimfn)){
+    if(! is.null(fact)&& is.numeric(fact) && length(fact)==1){
+      xlimfn <-multipancPoint;
+      ylimfn <-multipancPoint;
+    }else{
+      if(!is.null(xlim)&& is.numeric(xlim) && length(xlim)==2){
+	xlimfn <- usenew;
+      }else{
+	xlimfn <-keepanc;
+      }
+      if(!is.null(ylim) && is.numeric(ylim) && length(ylim)==2){
+	ylimfn <-usenew;
+      }else{
+	ylimfn <-keepanc;
+      }
+    }
+  }
+  if(is.null(ylimfn)){
+    ylimfn<-xlimfn
+  }
 
-	if(is.null(rp)){
-		tmp <- recordPlot()[[1]]
-	}else{
-		tmp<-rp[[1]]
-	}
+  if(is.null(rp)){
+    tmp <- recordPlot()[[1]]
+  }else{
+    tmp<-rp[[1]]
+  }
 
-	plotOk<-NULL
-	for (i in seq(along = tmp)) {
-		# cat("i:",i,"\n")
-		fn <- tmp[[i]][[1]]
-		alst <- as.list(tmp[[i]][[2]])
-		tmp1 <- is.locator(alst,fn)
-		if (is.logical(tmp1) && tmp1) {
-			next # will not like do.call
-		}
-		tmp2<- is.plot.window(alst,fn)
-		if (is.logical(tmp2) && tmp2) {
-			# print(alst)
-			# cat("alst orig:",alst[[1]],alst[[2]],"\n")
-			locx<-attributes(tmp2)$lims[1]
-			locy<-attributes(tmp2)$lims[2]
-			alst[[locx]] <- xlimfn(alst[[locx]],fact,xlim,x)
-			alst[[locy]] <- ylimfn(alst[[locy]],fact,ylim,y)
-		}
-		plotOk<-try(do.call(fn, alst))
-	}
-	if(isError(plotOk)){
-	   box() # finish the graph even if errors in between
-	}
+  plotOk<-NULL
+  for (i in seq(along = tmp)) {
+    # cat("i:",i,"\n")
+    fn <- tmp[[i]][[1]]
+    alst <- as.list(tmp[[i]][[2]])
+    tmp1 <- is.locator(alst,fn)
+    if (is.logical(tmp1) && tmp1) {
+      next # will not like do.call
+    }
+    tmp2<- is.plot.window(alst,fn)
+    if (is.logical(tmp2) && tmp2) {
+      # print(alst)
+      # cat("alst orig:",alst[[1]],alst[[2]],"\n")
+      locx<-attributes(tmp2)$lims[1]
+      locy<-attributes(tmp2)$lims[2]
+      alst[[locx]] <- xlimfn(alst[[locx]],fact,xlim,x)
+      alst[[locy]] <- ylimfn(alst[[locy]],fact,ylim,y)
+    }
+    plotOk<-try(do.call(fn, alst))
+  }
+  if(isError(plotOk)){
+    box() # finish the graph even if errors in between
+  }
 }
 
+is.out.of.plot.click<-function(loc){
+	plotLim<-par("usr")
+
+	if(loc$x<min(plotLim[1:2])
+	|| loc$x>max(plotLim[1:2])
+	|| loc$y>max(plotLim[3:4])
+	|| loc$y<min(plotLim[3:4])){
+		return(TRUE)
+	}else{
+		return(FALSE)
+	}
+}
+# to avoid repeating this painful piece
+other.option.session.message<-function(){
+  devType<-names(dev.cur())
+  terminate.key<-switch(EXPR=devType,
+	 X11 = "Any other click",
+	 quartz = "Hit Esc",
+	 RStudioGD = "Click on Finish",
+  	 windows = "Middle click","Terminate as in locator()")
+
+  cat(terminate.key,"for other options.\n")
+}
 
 #' @title Direct access to zoom functionalities.
 #'
@@ -176,6 +213,8 @@ zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,rp=NULL,x=NULL,y=NUL
 #' @param \dots Extra arguments to zoomplot.zoom.
 #' @note Each function starts a different interactive sequence
 #'  	\itemize{
+#' 	 	\item{inout.zoom(): }{left click within bounds zooms in, outside bounds zoom out}
+#' 	 	\item{move.to.click.zoom(): }{center plot arround left click}
 #' 	 	\item{in.zoom(): }{each left click zooms in}
 #' 	 	\item{out.zoom(): }{each left click zooms out}
 #' 	 	\item{set.zoom(): }{ask for a magnification factor}
@@ -188,7 +227,7 @@ zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,rp=NULL,x=NULL,y=NUL
 in.zoom<-function(...){
   # Ideally later should center arround the point selected
   cat("Left click to zoom in\n")
-  cat("Right click for other options\n")
+  other.option.session.message()
 
   center<-locator(1)
   if(length(center$x)==1){
@@ -198,12 +237,49 @@ in.zoom<-function(...){
   return()
 }
 #' @rdname in.zoom
+#' @export move.to.click.zoom
+# center the plot at the point of click
+move.to.click.zoom<-function(...){
+  cat("Click on the point you want to center the plot arround.\n")
+  other.option.session.message()
+
+  center<-locator(1)
+  if(length(center$x)==1){
+    zoomplot.zoom(fact=1,x=center$x,y=center$y,xlimfn=centerOnPoint,...);
+    move.to.click.zoom(...)
+  }
+  return()
+}
+
+#' allow interactive in/out zoom in "session" mode
+#' @rdname in.zoom
+#' @export inout.zoom
+inout.zoom<-function(...){
+  # Ideally later should center arround the point selected
+  cat("Left click in plot to zoom in\n")
+  cat("Left click out of plot to zoom out\n")
+  other.option.session.message()
+
+  center<-locator(1)
+  if(length(center$x)==1){
+	  if(is.out.of.plot.click(center)){
+		  zoomplot.zoom(fact=0.5,...);
+	  }else{
+		  zoomplot.zoom(fact=2,x=center$x,y=center$y,...);
+	  }
+    inout.zoom(...)
+  }
+  return()
+}
+#' @rdname in.zoom
 #' @export out.zoom
 out.zoom<-function(...){
   # Ideally later should center arround the point selected
   cat("Left click to zoom out\n")
-  cat("Right click for other options\n")
+  other.option.session.message()
+
   center<-locator(1)
+  print(center)
   if(length(center$x)==1){
     zoomplot.zoom(fact=0.5,x=center$x,y=center$y,...);
     out.zoom()
@@ -219,20 +295,45 @@ set.zoom<-function(...){
 	return()
 }
 
+# Double-click detection
+# Test is the output of locator corresponds to two identical points
+is.double.click<-function(loc){
+	if(length(loc$x)!=2){
+		cat("1\n")
+		return(FALSE)
+	}else{
+		if(loc$x[1]==loc$x[2] &&
+		loc$y[1]==loc$y[2]){
+			return(TRUE)
+		}else{
+		cat("2\n")
+		print(loc)
+			return(FALSE)
+		}
+	}
+}
+
 #' @rdname in.zoom
 #' @export sq.zoom
 sq.zoom<-function(...){
 	# use locator to zoom with the mouse (two left clicks)
 	# specially, ... can be used to pass a recorded plot rp
 	cat("Click left over opposite corners of zoom area.\n");
-	cat("Click right for other options.\n")
+	cat("Double left click for zoom out\n")
+	other.option.session.message()
 	square<-locator(2)
+	print(square)
 	if(length(square)==2){
-	  xmin<-min(square$x)
-	  xmax<-max(square$x)
-	  ymin<-min(square$y)
-	  ymax<-max(square$y)
-	  zoomplot.zoom(xlim=c(xmin,xmax),ylim=c(ymin,ymax),...)
+	  if(is.double.click(square)){
+		zoomplot.zoom(fact=0.5,x=square$x,y=square$y,...);
+	  	out.zoom()
+	  }else{
+		  xmin<-min(square$x)
+		  xmax<-max(square$x)
+		  ymin<-min(square$y)
+		  ymax<-max(square$y)
+		  zoomplot.zoom(xlim=c(xmin,xmax),ylim=c(ymin,ymax),...)
+	  }
 	  sq.zoom(...)
 	}
 }
@@ -267,16 +368,17 @@ pdf.zoom<-function(orig=NULL,fileName=NULL){
   print.zoom(dev=pdf)
 }
 
+#' @rdname navigation.zoom
+#' @export session.zoom
 session.zoom<-function(...){
 	orig <- recordPlot()
 	go_on<-TRUE
-	sq.zoom(...)
+	inout.zoom(...)
 	while(go_on){
 		cat("Do you want to?\n")
-		cat("     zoom in: 1\n")
-		cat("    zoom out: 2\n")
+		cat(" zoom in/out: 1\n")
+		cat("move arround: 2\n")
 		cat(" zoom square: 3\n")
-		cat(" set magnif.: 4\n")
 		cat(" save as png: 6\n")
 		cat(" save as pdf: 7\n")
 		cat("back to init: 9\n")
@@ -289,8 +391,8 @@ session.zoom<-function(...){
 				rm(exec.zoom)
 			}
 			exec.zoom<-switch(sel,
-				in.zoom,out.zoom,
-				sq.zoom,set.zoom,
+				inout.zoom,move.to.click.zoom,
+				sq.zoom,NULL,
 				NULL,png.zoom,pdf.zoom,NULL,
 				orig.zoom)
 			if(!is.null(exec.zoom)){
@@ -318,7 +420,7 @@ session.zoom<-function(...){
 # @return The returned value is a string that can be:\itemize{
 # \item{left }{left button of the mouse}
 # \item{right }{right button of the mouse}
-# \item{middle }{middle button or scrolling will *pressed*}
+# \item{middle }{middle button or scrolling weel *pressed*}
 # \item{scrollDown }{scrolling weel turned down}
 # \item{scrollUp }{scrolling weel turned up}
 # }
@@ -333,22 +435,26 @@ session.zoom<-function(...){
 labelButton<-function(buttons){
   # label the buttons with easy to remember names
   label<-""
-# cat("buttons:")
-# print(buttons)
+  # cat("buttons:")
+  # print(buttons)
   if(length(buttons)>=2){ # rightbutton or scrolling
     if(buttons[2]==2){ # scroll down
       label<-"scrollDown"
     }else if(buttons[2]==1){ # right button
       label<-"right"
     }
-  }else if(buttons==1){ # middle button
+  }else if(length(buttons)==1){
+    if(buttons==1){ # middle button
       label<-"middle"
-  }else if(buttons==0){
+    }else if(buttons==0){
       label<-"left"
-  }else if(buttons==2){# scroll up
+    }else if(buttons==2){# scroll up
       label<-"scrollUp"
+    }
+  }else{
+    label<-NULL
   }
-  # cat("mevent:",label,"\n")
+  # cat("label:",label,"\n")
   return(label)
 }
 
@@ -375,21 +481,24 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
     devset()
     usr <<- par("usr")
     mevent<-labelButton(buttons)
-    if(mevent=="scrollDown"){
-      fact<-0.7
-    }else if(mevent=="scrollUp"){
-      fact<-1.5
-    }else {
-      deltay <- diff(grconvertY(c(starty, y), "ndc", "user"))
-      fact<-max(min(1+deltay/(usr[2]-usr[1]),10),0.1)
-    }
-    xuser<-grconvertX(x, "ndc", "user")
-    yuser<-grconvertY(y, "ndc", "user")
+    if(!is.null(mevent)){
+      # cat("mevent:",mevent,"\n")
+      if(mevent=="scrollDown" || mevent=="middle"){
+	fact<-0.7
+      }else if(mevent=="scrollUp" || mevent == "right"){
+	fact<-1.5
+      }else {
+	deltay <- diff(grconvertY(c(starty, y), "ndc", "user"))
+	fact<-max(min(1+deltay/(usr[2]-usr[1]),10),0.1)
+      }
+      xuser<-grconvertX(x, "ndc", "user")
+      yuser<-grconvertY(y, "ndc", "user")
 
-    zoomplot.zoom(fact=fact,x=xuser,y=yuser)
-    # cat("fact:",fact,"\n")
-    # cat(usr[1:2],"->",xlim,"\n")
-    # cat(usr[3:4],"->",ylim,"\n")
+      zoomplot.zoom(fact=fact,x=xuser,y=yuser)
+      # cat("fact:",fact,"\n")
+      # cat(usr[1:2],"->",xlim,"\n")
+      # cat(usr[3:4],"->",ylim,"\n")
+    }
     NULL
   }
   mouseDownNavig <- function(buttons, x, y) {
@@ -400,12 +509,15 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
     # cat("buttonPress:",buttons,"\n")
     mevent<-labelButton(buttons)
     if(mevent=="scrollDown"){
+      eventEnv$onMouseMove <- zoomDyn
       zoomDyn(buttons,x,y)
     }else if(mevent=="scrollUp"){
+      eventEnv$onMouseMove <- zoomDyn
       zoomDyn(buttons,x,y)
     }else if(mevent=="middle"){
-      # cat("Turn on zoomDyn\n")
       eventEnv$onMouseMove <- zoomDyn
+      zoomDyn(buttons,x,y)
+      # cat("Turn on zoomDyn\n")
     }else if(mevent=="left"){
       # cat("Turn on dragmousemove\n")
       eventEnv$onMouseMove <- dragmousemove
@@ -510,13 +622,13 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
 #' @export navigation.zoom
 navigation.zoom<-function(...){
   message("Mouse:")
-  if (.Platform$OS.type == "windows") {
-    message("Hold left mouse button to move.\n",
-            "Right click to zoom in.\n",
-            "Hold left + click right to zoom out.")
-  } else {
-    message("Scroll to zoom\nLeft click to move")
+
+  if(names(dev.cur())=="windows"){
+    zoom.in.out.mes<-"Right to zoom in, Middle or Hold Left + click right to zoom out"
+  }else{
+    zoom.in.out.mes<-"Scroll to zoom in and out"
   }
+  message(zoom.in.out.mes,"\nHold left mouse button to move")
 
   message("\nKeyboard:")
   ## keyboard usage
@@ -622,7 +734,7 @@ replot <- function(rp=NULL) {
 #' Allow to zoom/navigate in any open plot. The controls should be intuitive:
 #' \itemize{
 #'   \item{zoom in:}{ scroll up, or right click if no scrolling weel.}
-#'   \item{zoom out:}{ scroll down, or double click if no scrolling weel.}
+#'   \item{zoom out:}{ scroll down, or Hold left + right click if no scrolling weel, or scrolling weel doesn't work.}
 #'   \item{move:}{ left click and move }
 #' }
 #'
