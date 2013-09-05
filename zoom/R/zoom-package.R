@@ -2,14 +2,13 @@
 
 #' Zoom/navigate any plot directly in R.
 #' 
-#' The single zm() function allows to launch an interactive viewing session
+#' @description The single zm() function allows to launch an interactive viewing session
 #' with any plot. You can zoom in and out and move the scope. 
 #' Additionally, if a device contains several plots it will
-#' simultanuously navigate all the plots.
+#' simultanuously navigate all the plots. Finally, it allows to print on the fly the current state
+#' and continue the navigation.
 #' 
-#' Finally, it allows to print on the fly the current state
-#' and continue the navigation
-#' 
+#' @details 
 #' It fully works under Windows standard GUI and Linux.
 #' 
 #' On Mac it fully works if launching R from the Xquartz terminal. It will
@@ -31,8 +30,8 @@
 #' functions like: \itemize{ 
 #' \item{navigation.zoom(): }{launch a mouse/keyboard interaction}
 #' \item{session.zoom(): }{launch a console menu + mouse interaction } 
-#' Themselves orchestrating lower level functions (see in.zoom and zoomplot.session help).
 #' }
+#' Themselves orchestrating lower level functions (see in.zoom and zoomplot.session help).
 #' 
 #' @name zoom-package
 #' @aliases zoom-package zoom
@@ -46,6 +45,7 @@
 #' Known issues: \itemize{
 #' \item{print to pdf:}{ in navigation mode, print a pdf generates 
 #'   a weird pdf. Exiting and printing using dev.print() works fine.}
+#' \item{scrolling weel under windows:}{ the windows plotting device doesn't "read" the scrolling weel, sorry we cannot do anything about that.}
 #' }
 #' @author Corentin M. Barbu
 #' 

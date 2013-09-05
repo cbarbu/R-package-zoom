@@ -734,7 +734,7 @@ replot <- function(rp=NULL) {
 #' Allow to zoom/navigate in any open plot. The controls should be intuitive:
 #' \itemize{
 #'   \item{zoom in:}{ scroll up, or right click if no scrolling weel.}
-#'   \item{zoom out:}{ scroll down, or Hold left + right click if no scrolling weel, or scrolling weel doesn't work.}
+#'   \item{zoom out:}{ scroll down, or Hold left + right click if no working weel.}
 #'   \item{move:}{ left click and move }
 #' }
 #'
