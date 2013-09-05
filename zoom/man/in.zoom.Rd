@@ -1,12 +1,15 @@
 \name{in.zoom}
 \alias{in.zoom}
 \alias{inout.zoom}
+\alias{move.to.click.zoom}
 \alias{out.zoom}
 \alias{set.zoom}
 \alias{sq.zoom}
 \title{Direct access to zoom functionalities.}
 \usage{
   in.zoom(...)
+
+  move.to.click.zoom(...)
 
   inout.zoom(...)
 
@@ -31,11 +34,13 @@
 \note{
   Each function starts a different interactive sequence
   \itemize{ \item{inout.zoom(): }{left click within bounds
-  zooms in, outside bounds zoom out} \item{in.zoom():
-  }{each left click zooms in} \item{out.zoom(): }{each left
-  click zooms out} \item{set.zoom(): }{ask for a
-  magnification factor} \item{sq.zoom(): }{allow to click
-  on the two corners of the desired region to zoom on} }
+  zooms in, outside bounds zoom out}
+  \item{move.to.click.zoom(): }{center plot arround left
+  click} \item{in.zoom(): }{each left click zooms in}
+  \item{out.zoom(): }{each left click zooms out}
+  \item{set.zoom(): }{ask for a magnification factor}
+  \item{sq.zoom(): }{allow to click on the two corners of
+  the desired region to zoom on} }
 }
 \author{
   Corentin M. Barbu
