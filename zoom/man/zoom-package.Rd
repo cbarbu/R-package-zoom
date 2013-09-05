@@ -45,9 +45,8 @@
   functions. } }
 }
 \note{
-  This package is maintained as part of the wider
-  spatcontrol project on github:
-  https://github.com/cbarbu/spatcontrol
+  This package has its own git repository: github:
+  https://github.com/cbarbu/R-package-zoom
 
   Bug reports/suggestions/patches can be directly submitted
   in this web interface.
