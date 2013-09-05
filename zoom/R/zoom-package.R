@@ -26,11 +26,11 @@
 #' See help(zm) for more details on how to use the package.
 #' 
 #' \tabular{ll}{ Package: \tab zoom\cr Type: \tab Package\cr Version: \tab
-#' 2.0.2\cr Date: \tab 2013-09-05\cr License: \tab LGPL\cr } The only function
+#' 2.0.3\cr Date: \tab 2013-09-05\cr License: \tab LGPL\cr } The only function
 #' end users should ever use is zm(). It orchestrate the access to other
 #' functions like: \itemize{ 
-#' \item{navigation.zoom(): }{launch a mouse interaction}
-#' \item{session.zoom(): }{launch a console menu interaction } 
+#' \item{navigation.zoom(): }{launch a mouse/keyboard interaction}
+#' \item{session.zoom(): }{launch a console menu + mouse interaction } 
 #' Themselves orchestrating lower level functions (see in.zoom and zoomplot.session help).
 #' }
 #' 

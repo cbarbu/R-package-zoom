@@ -1,8 +1,11 @@
 RELEASE HISTORY OF THE "zoom" PACKAGE
 =====================================
+Version 2.0.3 [2013-09-05]:
+- Add keyboard support in navigation mode
+- fix some bugs under windows, improve messages
+- systematic check of Rstudio on win, mac and linux.
 
 Version 2.0.2 [2013-09-03]:
-- Add keyboard support.
 - Improved interactive mode in session mode (Rstudio device etc.)
 
 Version 2.0.1 [2013-09-02]:
