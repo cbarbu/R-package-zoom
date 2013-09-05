@@ -369,11 +369,9 @@ session.zoom<-function(...){
 	inout.zoom(...)
 	while(go_on){
 		cat("Do you want to?\n")
-		cat("     zoom in: 1\n")
-		cat("    zoom out: 2\n")
+		cat(" zoom in/out: 1\n")
+		cat("move arround: 2\n")
 		cat(" zoom square: 3\n")
-		cat(" set magnif.: 4\n")
-		cat(" zoom in/out: 5\n")
 		cat(" save as png: 6\n")
 		cat(" save as pdf: 7\n")
 		cat("back to init: 9\n")
@@ -386,9 +384,9 @@ session.zoom<-function(...){
 				rm(exec.zoom)
 			}
 			exec.zoom<-switch(sel,
-				in.zoom,out.zoom,
-				sq.zoom,set.zoom,
-				inout.zoom,png.zoom,pdf.zoom,NULL,
+				inout.zoom,move.to.click.zoom,
+				sq.zoom,NULL,
+				NULL,png.zoom,pdf.zoom,NULL,
 				orig.zoom)
 			if(!is.null(exec.zoom)){
 				exec.zoom(orig=orig,...);
