@@ -180,7 +180,7 @@ is.out.of.plot.click<-function(loc){
 }
 # to avoid repeating this painful piece
 other.option.session.message<-function(){
-  cat("Terminate (as in locator()) for other options\n")
+  cat("Terminate (as using locator()) for other options.\n")
 }
 
 #' @title Direct access to zoom functionalities.
@@ -343,6 +343,7 @@ session.zoom<-function(...){
 		cat("    zoom out: 2\n")
 		cat(" zoom square: 3\n")
 		cat(" set magnif.: 4\n")
+		cat(" zoom in/out: 5\n")
 		cat(" save as png: 6\n")
 		cat(" save as pdf: 7\n")
 		cat("back to init: 9\n")
@@ -357,7 +358,7 @@ session.zoom<-function(...){
 			exec.zoom<-switch(sel,
 				in.zoom,out.zoom,
 				sq.zoom,set.zoom,
-				NULL,png.zoom,pdf.zoom,NULL,
+				inout.zoom,png.zoom,pdf.zoom,NULL,
 				orig.zoom)
 			if(!is.null(exec.zoom)){
 				exec.zoom(orig=orig,...);
