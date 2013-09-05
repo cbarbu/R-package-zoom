@@ -22,6 +22,15 @@ multipancPoint<-function(ancien,fact=1,new,point=NULL){
 
 	return(newRange);
 }
+centerOnPoint<-function(ancien,fact=1,new,point=NULL){
+  	currentCenter<-mean(ancien)
+	if(is.null(point)) point<-currentCenter
+	fact<-1/fact
+	newRange<- fact*ancien-currentCenter+point
+
+	return(newRange);
+}
+
 keepanc<-function(ancien,fact,new,point=NULL){
 	# cat("ancien",ancien,"fact",fact,"new:\n")
 	# print(new)
@@ -100,6 +109,8 @@ getalst<-function(tmp=recordPlot()[[1]]){
 #' corresponding warnings in ?recordPlot.
 #' @param x x of a fix point when rescaling, by default the center.
 #' @param y y of a fix point when rescaling, by default the center.
+#' @param xlimfn a function using x, y and/or fact to generate new x lim if NULL and xlim/ylim not given will use multipancPoint
+#' @param ylimfn a function using x, y and/or fact to generate new y lim, if NULL will use xlimfn
 #' @param \dots Additional parameters not implemented, just in case.
 #' @return Not guaranted for now.
 #' @note This function is the heart of the zoom package and the one that can be
@@ -113,57 +124,62 @@ getalst<-function(tmp=recordPlot()[[1]]){
 #' zoomplot.zoom(fact=2,x=0,y=0)
 #'
 #' @export zoomplot.zoom
-zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,rp=NULL,x=NULL,y=NULL,...)
+zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,rp=NULL,x=NULL,y=NULL,xlimfn=NULL,ylimfn=NULL,...)
 {
   # cat("using zoomplot.zoom")
-	# rp is a recorded plot
-	# fact is a factor of magnification/outzoom
-	# fact has priority on xlim/ylim
-	if(! is.null(fact)&& is.numeric(fact) && length(fact)==1){
-		xlimfn <-multipancPoint;
-		ylimfn <-multipancPoint;
-	}else{
-		if(!is.null(xlim)&& is.numeric(xlim) && length(xlim)==2){
-			xlimfn <- usenew;
-		}else{
-			xlimfn <-keepanc;
-		}
-		if(!is.null(ylim) && is.numeric(ylim) && length(ylim)==2){
-			ylimfn <-usenew;
-		}else{
-			ylimfn <-keepanc;
-		}
-	}
+  # rp is a recorded plot
+  # fact is a factor of magnification/outzoom
+  # fact has priority on xlim/ylim
+  if(is.null(xlimfn)){
+    if(! is.null(fact)&& is.numeric(fact) && length(fact)==1){
+      xlimfn <-multipancPoint;
+      ylimfn <-multipancPoint;
+    }else{
+      if(!is.null(xlim)&& is.numeric(xlim) && length(xlim)==2){
+	xlimfn <- usenew;
+      }else{
+	xlimfn <-keepanc;
+      }
+      if(!is.null(ylim) && is.numeric(ylim) && length(ylim)==2){
+	ylimfn <-usenew;
+      }else{
+	ylimfn <-keepanc;
+      }
+    }
+  }
+  if(is.null(ylimfn)){
+    ylimfn<-xlimfn
+  }
 
-	if(is.null(rp)){
-		tmp <- recordPlot()[[1]]
-	}else{
-		tmp<-rp[[1]]
-	}
+  if(is.null(rp)){
+    tmp <- recordPlot()[[1]]
+  }else{
+    tmp<-rp[[1]]
+  }
 
-	plotOk<-NULL
-	for (i in seq(along = tmp)) {
-		# cat("i:",i,"\n")
-		fn <- tmp[[i]][[1]]
-		alst <- as.list(tmp[[i]][[2]])
-		tmp1 <- is.locator(alst,fn)
-		if (is.logical(tmp1) && tmp1) {
-			next # will not like do.call
-		}
-		tmp2<- is.plot.window(alst,fn)
-		if (is.logical(tmp2) && tmp2) {
-			# print(alst)
-			# cat("alst orig:",alst[[1]],alst[[2]],"\n")
-			locx<-attributes(tmp2)$lims[1]
-			locy<-attributes(tmp2)$lims[2]
-			alst[[locx]] <- xlimfn(alst[[locx]],fact,xlim,x)
-			alst[[locy]] <- ylimfn(alst[[locy]],fact,ylim,y)
-		}
-		plotOk<-try(do.call(fn, alst))
-	}
-	if(isError(plotOk)){
-	   box() # finish the graph even if errors in between
-	}
+  plotOk<-NULL
+  for (i in seq(along = tmp)) {
+    # cat("i:",i,"\n")
+    fn <- tmp[[i]][[1]]
+    alst <- as.list(tmp[[i]][[2]])
+    tmp1 <- is.locator(alst,fn)
+    if (is.logical(tmp1) && tmp1) {
+      next # will not like do.call
+    }
+    tmp2<- is.plot.window(alst,fn)
+    if (is.logical(tmp2) && tmp2) {
+      # print(alst)
+      # cat("alst orig:",alst[[1]],alst[[2]],"\n")
+      locx<-attributes(tmp2)$lims[1]
+      locy<-attributes(tmp2)$lims[2]
+      alst[[locx]] <- xlimfn(alst[[locx]],fact,xlim,x)
+      alst[[locy]] <- ylimfn(alst[[locy]],fact,ylim,y)
+    }
+    plotOk<-try(do.call(fn, alst))
+  }
+  if(isError(plotOk)){
+    box() # finish the graph even if errors in between
+  }
 }
 
 is.out.of.plot.click<-function(loc){
@@ -211,6 +227,20 @@ in.zoom<-function(...){
   if(length(center$x)==1){
     zoomplot.zoom(fact=2,x=center$x,y=center$y,...);
     in.zoom()
+  }
+  return()
+}
+#' @rdname in.zoom
+#' @export move.to.click.zoom
+# center the plot at the point of click
+move.to.click.zoom<-function(...){
+  cat("Click on the point you want to center the plot arround.\n")
+  other.option.session.message()
+
+  center<-locator(1)
+  if(length(center$x)==1){
+    zoomplot.zoom(fact=1,x=center$x,y=center$y,xlimfn=centerOnPoint,...);
+    move.to.click.zoom(...)
   }
   return()
 }
