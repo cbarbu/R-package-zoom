@@ -195,11 +195,11 @@ is.out.of.plot.click<-function(loc){
 # to avoid repeating this painful piece
 other.option.session.message<-function(){
   devType<-names(dev.cur())
-  terminate.key<-switch(devType,
+  terminate.key<-switch(EXPR=devType,
 	 X11 = "Any other click",
 	 quartz = "Hit Esc",
 	 RStudioGD = "Click on Finish",
-  	 window = "Middle click")
+  	 window = "Middle click","Terminate as in locator()")
 
   cat(terminate.key,"for other options.\n")
 }
