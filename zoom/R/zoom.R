@@ -553,12 +553,12 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
                       paste0(round(.xlim(), digits=3), collapse=", "), "), ",
                       "ylim=c(",
                       paste0(round(.ylim(), digits=3), collapse=", "), ")") },
-      ## zoom in (ctrl-* == [CTRL]+[+])
+      ## restaure initial size
       "r" = { orig.zoom(rp) },
       ## zoom in (ctrl-* == [CTRL]+[+])
-      "ctrl-*" =, "+" = { zoomplot.zoom(fact=1.1) },
+      "ctrl-*" =, "i" =,"+" = { zoomplot.zoom(fact=1.1) },
       ## zoom out (ctrl-_ == [CTRL]+[-])
-      "ctrl-_" =, "-" = { zoomplot.zoom(fact=0.9) },
+      "ctrl-_" =, "o" =,"-" = { zoomplot.zoom(fact=0.9) },
       ## zoom in (x-axis only)
       "L" = { zoomplot.zoom(xlim=.zoomXlim(1.1)) },
       ## zoom out (x-axis only)
@@ -610,7 +610,7 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
 #' @aliases navigation.zoom session.zoom
 #' @param \dots Everything that can be accepted by sq.zoom.
 #' @return Returns the final plot, as saved by recordPlot().
-#' @author Corentin M. Barbu
+#' @author Corentin M. Barbu, Sebastian Gibb
 #' @seealso zm().
 #' @keywords session navigation
 #' @examples
@@ -633,7 +633,7 @@ navigation.zoom<-function(...){
   message("\nKeyboard:")
   ## keyboard usage
   keys <- c("Left/Right (h/l)", "Up/Down (k/j)",
-            "CTRL++/CTRL+-", "L/H", "K/J",
+            "+ or i / - or o", "L/H", "K/J",
             "p", "r", "s")
   usage <- c("move left/right", "move up/down",
              "zoom in/out", "zoom in/out (x-axis only)",
