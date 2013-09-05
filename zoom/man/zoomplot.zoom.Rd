@@ -3,7 +3,8 @@
 \title{Central low level function of the zoom package.}
 \usage{
   zoomplot.zoom(xlim = NULL, ylim = NULL, fact = NULL,
-    rp = NULL, x = NULL, y = NULL, ...)
+    rp = NULL, x = NULL, y = NULL, xlimfn = NULL,
+    ylimfn = NULL, ...)
 }
 \arguments{
   \item{xlim}{A vector with min and max x}
@@ -21,6 +22,13 @@
 
   \item{y}{y of a fix point when rescaling, by default the
   center.}
+
+  \item{xlimfn}{a function using x, y and/or fact to
+  generate new x lim if NULL and xlim/ylim not given will
+  use multipancPoint}
+
+  \item{ylimfn}{a function using x, y and/or fact to
+  generate new y lim, if NULL will use xlimfn}
 
   \item{\dots}{Additional parameters not implemented, just
   in case.}
