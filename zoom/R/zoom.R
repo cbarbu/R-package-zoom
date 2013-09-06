@@ -111,8 +111,9 @@ getalst<-function(tmp=recordPlot()[[1]]){
 #' @param ylimfn a function using x, y and/or fact to generate new y lim, if NULL will use xlimfn
 #' @param \dots Additional parameters not implemented, just in case.
 #' @return Not guaranted for now.
-#' @note This function is the heart of the zoom package and the one that can be
+#' @note This function is the heart of the zoom package and the one that can be.
 #' affected by R version changes.
+#' It is inspired by the zoomplot function in TeachingDemos package
 #' @author Corentin M. Barbu
 #' @seealso zm, in.zoom
 #' @keywords zoom plot
@@ -196,6 +197,7 @@ is.out.of.plot.click<-function(loc){
 other.option.session.message<-function(){
   devType<-names(dev.cur())
   terminate.key<-switch(EXPR=devType,
+	 X11cairo = "Any other click",
 	 X11 = "Any other click",
 	 quartz = "Hit Esc",
 	 RStudioGD = "Click on Finish",
