@@ -715,6 +715,8 @@ replot <- function(rp=NULL) {
     cl <- call("X11", type="Xlib")
   }
 
+  initWarn<-options("warn")
+  options(warn=2) # avoid overlooking a warning that may be deal killer
   if (!isError(try(eval(cl), silent=TRUE)) &&
       !isError(try(replayPlot(rp), silent=TRUE))) {
     message("Replot successful, use ", deparse(cl), " to avoid this step.")
@@ -727,6 +729,7 @@ replot <- function(rp=NULL) {
     message("Use ", deparse(cl), " to enable navigation.")
     return(FALSE)
   }
+  options(warn=initWarn)
 }
 
 # zm() Main function, choosing between navigation or old "session" interactions
