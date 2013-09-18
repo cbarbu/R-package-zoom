@@ -822,25 +822,3 @@ zm <- function(type="navigation", rp=NULL) {
   }
 }
 
-# need to check possibility to
-# orig <- recordPlot()
-# X11(type = "Xlib")
-# replayPlot(orig)
-
-
-# # example:
-# X11(type = "Xlib") # to allow google map like navigation
-# plot(rnorm(1000),rnorm(1000))
-# zm()
-# # to force old behavior
-# zm(type="s")
-
-
-# # example old:
-# plot(runif(1000))
-# plot(runif(1000))
-# abline(0,1)
-# original<-session.zoom()
-#
-# # and to go back to the original
-# replayPlot(original);
