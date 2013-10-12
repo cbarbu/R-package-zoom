@@ -13,7 +13,6 @@
 #' }
 #'
 #' zm(), called with any active plot allow to enter an interactive session to zoom/navigate any plot. The development version, as well as binary releases can be found at https://github.com/cbarbu/R-package-zoom
-#' 
 #'
 #' @aliases zoom-package zoom
 #' @name zoom-package
