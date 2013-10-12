@@ -21,7 +21,7 @@ Authors@R: c(person(given="Corentin M", family="Barbu",
     email="corentin.barbu@gmail.com", role=c("aut", "cre")),
     person(given="Sebastian", family="Gibb", role="ctb",
     email="mail@sebastiangibb.de"))
-Version: 2.0.2
+Version: 2.0.4
 Date: 2013-10-12
 Collate:
     'utils.R'

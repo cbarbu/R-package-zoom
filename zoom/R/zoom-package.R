@@ -3,7 +3,7 @@
 #' \tabular{ll}{
 #' Package: \tab zoom\cr
 #' Type: \tab Package\cr
-#' Version: \tab 2.0.2\cr
+#' Version: \tab 2.0.4\cr
 #' Date: \tab 2013-10-12\cr
 #' Depends: \tab R (>= 2.10.0)\cr
 #' Encoding: \tab UTF-8\cr
