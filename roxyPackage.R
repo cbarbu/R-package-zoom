@@ -61,11 +61,7 @@ Maintainer="Corentin M. Barbu <corentin.barbu@gmail.com>",
 Depends="R (>= 2.10.0)",
 Suggests="testthat",
 VignetteBuilder="knitr",
-Description="zm(), called with any active plot allow to enter an
-  interactive session to zoom/navigate any plot. 
-    The development version, as well as binary releases can be found at
-https: //github.com/cbarbu/R-package-zoom
-",
+Description="zm(), called with any active plot allow to enter an interactive session to zoom/navigate any plot. The development version, as well as binary releases can be found at https://github.com/cbarbu/R-package-zoom",
 License="GPL (>= 3)",
 Encoding="UTF-8",
 LazyLoad="yes",

@@ -1,71 +1,24 @@
-
-
-#' Zoom/navigate any plot directly in R.
-#' 
-#' The single zm() function allows to launch an interactive viewing session
-#' with any plot. You can zoom in and out and move the scope (just as in Google
-#' maps). Additionally, if a device contains several plots it will
-#' simultanuously navigate all the plots.
-#' 
-#' Finally, it allows to print on the fly the current state
-#' and continue the navigation
-#' 
-#' It fully works under Windows standard GUI and Linux.
-#' 
-#' On Mac it fully works if launching R from the Xquartz terminal. It will
-#' default to the "session" mode if launched from Rgui. R launched from the
-#' system terminal may have a bug with X11 fonts that prevents even the
-#' simplest plots to be displayed, it will not get any better with this
-#' package.
-#' 
-#' Rstudio: should work fine on windows after replot of the graph 
-#' in a native windows window. On Mac and linux it should fallback 
-#' to the less interactive session, allowing to zoom in the Rstudio plotting
-#' region itself.
-#' 
-#' See help(zm) for more details on how to use the package.
-#' 
-#' \tabular{ll}{ Package: \tab zoom\cr Type: \tab Package\cr Version: \tab
-#' 2.0\cr Date: \tab 2013-08-22\cr License: \tab LGPL\cr } The only function
-#' end users should ever use is zm(). It orchestrate the access to other
-#' functions like: \itemize{ 
-#' \item{navigation.zoom(): }{launch a mouse interaction}
-#' \item{session.zoom(): }{launch a console menu interaction } 
+#' A spatial data visualization tool.
+#'
+#' \tabular{ll}{
+#' Package: \tab zoom\cr
+#' Type: \tab Package\cr
+#' Version: \tab 2.0.2\cr
+#' Date: \tab 2013-10-12\cr
+#' Depends: \tab R (>= 2.10.0)\cr
+#' Encoding: \tab UTF-8\cr
+#' License: \tab GPL (>= 3)\cr
+#' LazyLoad: \tab yes\cr
+#' URL: \tab https://github.com/cbarbu/R-package-zoom\cr
 #' }
-#' Themselves orchestrating lower level functions: 
-#' \itemize{ 
-#' \item{in.zoom(): }{zoom in}
-#' \item{out.zoom(): }{zoom out}
-#' \item{set.zoom(): }{zoom to a magnification factor}
-#' \item{sq.zoom(): }{zoom on a user defined square}
-#' \item{zoomplot.zoom(): }{the heart function reploting everything as directed by higher level functions. }
-#' }
+#'
+#' zm(), called with any active plot allow to enter an interactive session to zoom/navigate any plot. The development version, as well as binary releases can be found at https://github.com/cbarbu/R-package-zoom
 #' 
-#' @name zoom-package
+#'
 #' @aliases zoom-package zoom
+#' @name zoom-package
 #' @docType package
-#' @note This package is maintained as part of the wider spatcontrol project on
-#' github: https://github.com/cbarbu/spatcontrol
-#' 
-#' Bug reports/suggestions/patches can be directly submitted in this web
-#' interface.
-#' 
-#' Known issues: \itemize{
-#' \item{print to pdf:}{ in navigation mode, print of a pdf generates 
-#'   a weird pdf. Exiting and printing using print.zoom() or 
-#'   simply dev.print() works fine.}
-#' }
-#' @author Corentin M. Barbu
-#' 
-#' Maintainer: Corentin M. Barbu <corentin.barbu@@gmail.com>
-#' @keywords zoom plot navigate navigation
-#' @examples
-#' \dontrun{
-#' plot(rnorm(1000),rnorm(1000))
-#' zm()
-#' }
-#' 
+#' @title The zoom Package
+#' @author Corentin M Barbu \email{corentin.barbu@@gmail.com}, with contributions from Sebastian Gibb \email{mail@@sebastiangibb.de}
+#' @keywords package
 NULL
-
-
-
