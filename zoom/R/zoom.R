@@ -350,7 +350,7 @@ print.zoom<-function(orig=NULL,dev=NULL,fileName=NULL,...){
     fileName<-file.choose()
   }
   if(is.null(dev)){
-    if (isError(try(dev<-eval(parse(text=tools:::file_ext(fileName))),
+    if (isError(try(dev<-eval(parse(text=tools::file_ext(fileName))),
                     silent=TRUE))) {
       cat("Error: extension not recognized, try png or pdf\n")
       return(1)
@@ -359,6 +359,7 @@ print.zoom<-function(orig=NULL,dev=NULL,fileName=NULL,...){
   devSize<-dev.size(units="px")
 
   dev.print(device=dev,fileName,width=devSize[1],height=devSize[2],...)
+  cat("Successfully printed in",fileName,"\n")
 }
 
 png.zoom<-function(orig=NULL,fileName=NULL,...){
@@ -381,8 +382,7 @@ session.zoom<-function(...){
 		cat(" zoom in/out: 1\n")
 		cat("move arround: 2\n")
 		cat(" zoom square: 3\n")
-		cat(" save as png: 6\n")
-		cat(" save as pdf: 7\n")
+		cat("        save: 6\n")
 		cat("back to init: 9\n")
 		cat("        Exit: Enter\n")
 		sel<-scan(n=1)
@@ -395,7 +395,7 @@ session.zoom<-function(...){
 			exec.zoom<-switch(sel,
 				inout.zoom,move.to.click.zoom,
 				sq.zoom,NULL,
-				NULL,png.zoom,pdf.zoom,NULL,
+				NULL,print.zoom,NULL,NULL,
 				orig.zoom)
 			if(!is.null(exec.zoom)){
 				exec.zoom(orig=orig,...);
@@ -726,7 +726,7 @@ replot <- function(rp=NULL) {
       dev.off()
     }
     message("Fall back to classical interface.")
-    message("Use ", deparse(cl), " to enable navigation.")
+    message("Use ", deparse(cl), " to enable full navigation.")
     return(FALSE)
   }
   options(warn=initWarn)
