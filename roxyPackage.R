@@ -71,7 +71,6 @@ actions=c(
 "roxy",
 "cite",
 "html",
-"license",
 "doc",
 "package"
 ))
