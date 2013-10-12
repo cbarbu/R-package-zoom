@@ -6,3 +6,5 @@
 
 # checks folder
 zoom.Rcheck
+# define local variable
+localRlib.txt
