@@ -356,9 +356,13 @@ print.zoom<-function(orig=NULL,dev=NULL,fileName=NULL,...){
       return(1)
     }
   }
-  devSize<-dev.size(units="px")
 
-  dev.print(device=dev,fileName,width=devSize[1],height=devSize[2],...)
+  if(identical(dev,pdf)){
+    dev.print(device=dev,fileName,...)
+  }else{
+    devSize<-dev.size(units="px")
+    dev.print(device=dev,fileName,width=devSize[1],height=devSize[2],...)
+  }
   cat("Successfully printed in",fileName,"\n")
 }
 
