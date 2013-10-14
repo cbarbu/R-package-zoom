@@ -36,7 +36,7 @@ if(file.exists(localRlibFile)){
     autoLocalLib<-.libPaths()[numLocalLib[1]]
     autoLocalText<-paste0("localRlib <-\"",autoLocalLib,"\"\n")
     cat(file=localRlibFile,autoLocalText)
-    warning("localRlib.txt auto generated:\n",autoLocalText,"\n proceed with caution.")
+    warning("localRlib.txt auto generated:\n",autoLocalText,"\n proceeding with caution.")
   }else{
     warning("Cannot identify your local lib folder using .libPaths() in R.\nConsider adding one and relaunching this script.\nLocal installation will not be done.")
   }
@@ -55,12 +55,9 @@ pck.description=data.frame(
 Package="zoom",
 Type="Package",
 Title="A spatial data visualization tool",
-Author= paste(eval(parse(text=authors)),collapse=", "),
 AuthorsR=authors,
-Maintainer="Corentin M. Barbu <corentin.barbu@gmail.com>",
 Depends="R (>= 2.10.0)",
 Suggests="testthat",
-VignetteBuilder="knitr",
 Description="zm(), called with any active plot allow to enter an interactive session to zoom/navigate any plot. The development version, as well as binary releases can be found at https://github.com/cbarbu/R-package-zoom",
 License="GPL (>= 3)",
 Encoding="UTF-8",
