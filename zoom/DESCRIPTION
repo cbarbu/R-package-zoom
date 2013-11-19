@@ -1,14 +1,10 @@
 Package: zoom
 Type: Package
 Title: A spatial data visualization tool
-Author: Corentin M Barbu <corentin.barbu@gmail.com> [aut, cre],
-    Sebastian Gibb <mail@sebastiangibb.de> [ctb]
-Maintainer: Corentin M. Barbu <corentin.barbu@gmail.com>
 Depends:
     R (>= 2.10.0)
 Suggests:
     testthat
-VignetteBuilder: knitr
 Description: zm(), called with any active plot allow to enter an
     interactive session to zoom/navigate any plot. The development
     version, as well as binary releases can be found at
