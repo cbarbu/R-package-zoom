@@ -22,7 +22,7 @@ Authors@R: c(person(given="Corentin M", family="Barbu",
     person(given="Sebastian", family="Gibb", role="ctb",
     email="mail@sebastiangibb.de"))
 Version: 2.0.4
-Date: 2013-10-12
+Date: 2013-11-19
 Collate:
     'utils.R'
     'zoom-package.R'

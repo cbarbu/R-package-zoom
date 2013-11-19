@@ -443,19 +443,23 @@ labelButton<-function(buttons){
   label<-""
   # cat("buttons:")
   # print(buttons)
-  if(length(buttons)>=2){ # rightbutton or scrolling
-    if(buttons[2]==2){ # scroll down
-      label<-"scrollDown"
-    }else if(buttons[2]==1){ # right button
-      label<-"right"
-    }
-  }else if(length(buttons)==1){
+  if(length(buttons)==1){
     if(buttons==1){ # middle button
       label<-"middle"
     }else if(buttons==0){
       label<-"left"
     }else if(buttons==2){# scroll up
       label<-"scrollUp"
+    }
+  }else if(length(buttons)>=2){ # rightbutton or scrolling
+    if(buttons[2]==2){ # scroll down
+      label<-"scrollDown"
+    }else if(buttons[2]==1){ # right button
+      label<-"right"
+    }else if(buttons[1]==2){ # scroll up button
+      label<-"scrollUp"
+    }else if(buttons[1]==1){ # middle button
+      label<-"middle"
     }
   }else{
     label<-NULL
@@ -512,7 +516,7 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
     starty <<- y
     devset()
     usr <<- par("usr")
-    # cat("buttonPress:",buttons,"\n")
+    cat("buttonPress:",buttons,"\n")
     mevent<-labelButton(buttons)
     if(mevent=="scrollDown"){
       eventEnv$onMouseMove <- zoomDyn
