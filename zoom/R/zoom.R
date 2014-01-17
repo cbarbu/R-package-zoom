@@ -516,7 +516,7 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
     starty <<- y
     devset()
     usr <<- par("usr")
-    cat("buttonPress:",buttons,"\n")
+    # cat("buttonPress:",buttons,"\n")
     mevent<-labelButton(buttons)
     if(mevent=="scrollDown"){
       eventEnv$onMouseMove <- zoomDyn
