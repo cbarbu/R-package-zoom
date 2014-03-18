@@ -566,17 +566,17 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
       ## restaure initial size
       "r" = { orig.zoom(rp) },
       ## zoom in (ctrl-* == [CTRL]+[+])
-      "ctrl-*" =, "i" =,"+" = { zoomplot.zoom(fact=1.1) },
+      "ctrl-*" =, "i" =,"+" = { zoomplot.zoom(fact=10/9) },
       ## zoom out (ctrl-_ == [CTRL]+[-])
-      "ctrl-_" =, "o" =,"-" = { zoomplot.zoom(fact=0.9) },
+      "ctrl-_" =, "o" =,"-" = { zoomplot.zoom(fact=9/10) },
       ## zoom in (x-axis only)
-      "L" = { zoomplot.zoom(xlim=.zoomXlim(1.1)) },
+      "L" = { zoomplot.zoom(xlim=.zoomXlim(10/9)) },
       ## zoom out (x-axis only)
-      "H" = { zoomplot.zoom(xlim=.zoomXlim(0.9)) },
+      "H" = { zoomplot.zoom(xlim=.zoomXlim(9/10)) },
       ## zoom in (y-axis only)
-      "K" = { zoomplot.zoom(ylim=.zoomYlim(1.1)) },
+      "K" = { zoomplot.zoom(ylim=.zoomYlim(10/9)) },
       ## zoom out (y-axis only)
-      "J" = { zoomplot.zoom(ylim=.zoomYlim(0.9)) },
+      "J" = { zoomplot.zoom(ylim=.zoomYlim(9/10)) },
       ## move left
       "Left" =, "h" = { zoomplot.zoom(xlim=.moveXlim(-0.1)) },
       ## move right
