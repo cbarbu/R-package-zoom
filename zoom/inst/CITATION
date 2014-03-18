@@ -2,12 +2,12 @@ bibentry("Manual",
 		title="zoom: A spatial data visualization tool",
 		author="Corentin M Barbu",
 		year="2014",
-		note="(Version 2.0.4)",
+		note="(Version 2.0.6)",
 		url="https://github.com/cbarbu/R-package-zoom",
 
 		textVersion =
 		paste("Barbu, CM. (2014). ",
-				"zoom: A spatial data visualization tool (Version 2.0.4). ",
+				"zoom: A spatial data visualization tool (Version 2.0.6). ",
 				"Available from https://github.com/cbarbu/R-package-zoom",
 				sep=""),
 
