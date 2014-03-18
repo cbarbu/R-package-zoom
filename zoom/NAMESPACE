@@ -1,5 +1,5 @@
-export(in.zoom)
 export(inout.zoom)
+export(in.zoom)
 export(move.to.click.zoom)
 export(navigation.zoom)
 export(out.zoom)

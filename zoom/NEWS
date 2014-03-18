@@ -1,5 +1,9 @@
 RELEASE HISTORY OF THE "zoom" PACKAGE
 =====================================
+Version 2.0.4 [2014-02-27]:
+- fix navigation bugs
+- no garbage on screen printing
+
 Version 2.0.4 [2013-10-12]:
 - fix pdf print bug
 - guess format for printing in navigation mode

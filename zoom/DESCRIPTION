@@ -18,7 +18,7 @@ Authors@R: c(person(given="Corentin M", family="Barbu",
     person(given="Sebastian", family="Gibb", role="ctb",
     email="mail@sebastiangibb.de"))
 Version: 2.0.4
-Date: 2013-11-19
+Date: 2014-02-27
 Collate:
     'utils.R'
     'zoom-package.R'

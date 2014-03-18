@@ -47,7 +47,7 @@ if(file.exists(localRlibFile)){
 
 roxy.package(
 pck.source.dir="./zoom",
-pck.version="2.0.4",
+pck.version="2.0.5",
 R.libs=localRlib,
 repo.root="../../repo",
 rm.vignette=TRUE,
