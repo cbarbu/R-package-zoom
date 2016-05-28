@@ -13,12 +13,26 @@
 # multipancPoint
 # @rdname replot
 
-multipancPoint<-function(ancien,fact=1,new,point=NULL){
+multipancPoint<-function(ancien,fact,move,new,point=NULL,isLog){
 	# cat("ancien",ancien,"fact",fact,"new:\n")
 	# print(new)
-  	if(is.null(point)) point<-mean(ancien)
-	fact<-1/fact
-	newRange<- (1-fact)*point+fact*ancien
+    if(! is.null(fact)&& is.numeric(fact) && length(fact)==1){
+        if(is.null(point)) point<-mean(ancien)
+        fact<-1/fact
+        newRange<- (1-fact)*point+fact*ancien
+    }else if(!is.null(move) && is.numeric(move) && length(move)==1){
+        newRange <- .movelim(ancien,move,isLog)
+    }else{
+        if(!is.null(new)&& is.numeric(new) && length(new)==2){
+            newRange <- new
+        }else{
+            newRange <- ancien
+        }
+    }
+    if(isLog && newRange[1]<=0){
+        correction <- (10e-12)-newRange[1]
+        newRange <- newRange+correction
+    }
 
 	return(newRange);
 }
@@ -93,7 +107,7 @@ getalst<-function(tmp=recordPlot()[[1]]){
 
 #' Central low level function of the zoom package.
 #'
-#' This function allow to replot the current or a saved plot with specific
+#' This function allows to replot the current or a saved plot with specific
 #' boundaries, magnification factor and possibly arround a user defined x/y.
 #'
 #' This function is not necessarily easy to use by hand. It is designed to work
@@ -123,29 +137,16 @@ getalst<-function(tmp=recordPlot()[[1]]){
 #' zoomplot.zoom(fact=2,x=0,y=0)
 #'
 #' @export zoomplot.zoom
-zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,rp=NULL,x=NULL,y=NULL,xlimfn=NULL,ylimfn=NULL,...)
+zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,moveX=NULL,moveY=NULL,rp=NULL,x=NULL,y=NULL,xlimfn=NULL,ylimfn=NULL,...)
 {
   # cat("using zoomplot.zoom")
   # rp is a recorded plot
   # fact is a factor of magnification/outzoom
   # fact has priority on xlim/ylim
-  if(is.null(xlimfn)){
-    if(! is.null(fact)&& is.numeric(fact) && length(fact)==1){
-      xlimfn <-multipancPoint;
-      ylimfn <-multipancPoint;
-    }else{
-      if(!is.null(xlim)&& is.numeric(xlim) && length(xlim)==2){
-	xlimfn <- usenew;
-      }else{
-	xlimfn <-keepanc;
-      }
-      if(!is.null(ylim) && is.numeric(ylim) && length(ylim)==2){
-	ylimfn <-usenew;
-      }else{
-	ylimfn <-keepanc;
-      }
+    if(is.null(xlimfn)){
+        xlimfn <- multipancPoint
+        ylimfn <- multipancPoint
     }
-  }
   if(is.null(ylimfn)){
     ylimfn<-xlimfn
   }
@@ -155,6 +156,9 @@ zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,rp=NULL,x=NULL,y=NUL
   }else{
     tmp<-rp[[1]]
   }
+
+  xlog <- par("xlog")
+  ylog <- par("ylog")
 
   plotOk<-NULL
   for (i in seq(along = tmp)) {
@@ -171,8 +175,8 @@ zoomplot.zoom <- function (xlim=NULL, ylim = NULL,fact=NULL,rp=NULL,x=NULL,y=NUL
       # cat("alst orig:",alst[[1]],alst[[2]],"\n")
       locx<-attributes(tmp2)$lims[1]
       locy<-attributes(tmp2)$lims[2]
-      alst[[locx]] <- xlimfn(alst[[locx]],fact,xlim,x)
-      alst[[locy]] <- ylimfn(alst[[locy]],fact,ylim,y)
+      alst[[locx]] <- xlimfn(alst[[locx]],fact,moveX,xlim,x,xlog)
+      alst[[locy]] <- ylimfn(alst[[locy]],fact,moveY,ylim,y,ylog)
     }
     plotOk<-try(do.call(fn, alst))
   }
@@ -578,13 +582,13 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
       ## zoom out (y-axis only)
       "J" = { zoomplot.zoom(ylim=.zoomYlim(9/10)) },
       ## move left
-      "Left" =, "h" = { zoomplot.zoom(xlim=.moveXlim(-0.1)) },
+      "Left" =, "h" = { zoomplot.zoom(moveX=-0.1) },
       ## move right
-      "Right" =, "l" = { zoomplot.zoom(xlim=.moveXlim(+0.1)) },
+      "Right" =, "l" = { zoomplot.zoom(moveX=+0.1) },
       ## move down
-      "Down" =, "j" = { zoomplot.zoom(ylim=.moveYlim(-0.1)) },
+      "Down" =, "j" = { zoomplot.zoom(moveY=-0.1) },
       ## move up
-      "Up" =, "k" = { zoomplot.zoom(ylim=.moveYlim(+0.1)) },
+      "Up" =, "k" = { zoomplot.zoom(moveY=+0.1) },
       ## default (nothing)
       {}
     )
@@ -812,7 +816,6 @@ replot <- function(rp=NULL) {
 #'
 #' @export zm
 zm <- function(type="navigation", rp=NULL) {
-
   if (missing(type)) {
     if (isError(try(setCallBack(), silent=TRUE))) {
       if (replot(rp=rp)) {

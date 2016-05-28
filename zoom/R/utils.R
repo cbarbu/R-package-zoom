@@ -20,23 +20,24 @@ isError <- function(x) {
 }
 
 ## move xlim limits:
-.movelim <- function(lim, width) {
+.movelim <- function(lim, width,isLog) {
   step <- diff(lim)*width
-  return(lim+step)
+  out <- lim+step
+  return(out)
 }
 
 ## move xlim limits
 ##  width > 0 => to the right
 ##  width < 0 => to the left
 .moveXlim <- function(width) {
-  return(.movelim(.xlim(), width=width))
+  return(.movelim(.xlim(), width=width,isLog=par("xlog")))
 }
 
 ## move ylim limits
 ##  width > 0 => up
 ##  width < 0 => down
 .moveYlim <- function(width) {
-  return(.movelim(.ylim(), width=width))
+  return(.movelim(.ylim(), width=width,isLog=par("ylog")))
 }
 
 ## zoom limits
