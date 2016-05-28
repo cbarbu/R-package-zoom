@@ -481,15 +481,33 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
   #---------------------
   # Navigation functions
   #---------------------
-    dragmousemove <- function(buttons, x, y) {
-    devset()
-    # cat("In dragmousemove\n")
-    deltax <- diff(grconvertX(c(startx, x), "ndc", "user"))
-    deltay <- diff(grconvertY(c(starty, y), "ndc", "user"))
-    xlim<<-usr[1:2]-deltax
-    ylim <<-usr[3:4]-deltay
-    zoomplot.zoom(xlim=xlim,ylim=ylim,...)
-    NULL
+  dragmousemove <- function(buttons, x, y) {
+      devset()
+      # cat("In dragmousemove\n")
+      deltax <- diff(grconvertX(c(startx, x), "ndc", "user"))
+      deltay <- diff(grconvertY(c(starty, y), "ndc", "user"))
+      if(par("xlog")){
+          xlim<<-10^usr[1:2]-deltax
+          if(xlim[1] <=0){
+              xlim <<- 10^usr[1:2]
+          }
+      }else{
+          xlim<<-usr[1:2]-deltax
+      }
+      if(par("ylog")){
+          ylim <<-10^usr[3:4]-deltay
+          if(ylim[1] <=0){
+              ylim <<- 10^usr[3:4]
+          }
+      }else{
+          ylim <<-usr[3:4]-deltay
+      }
+      moveX <- diff(c(startx, x))
+      moveY <- diff(c(starty, y))
+      
+      zoomplot.zoom(xlim=xlim,ylim=ylim,...)
+      # zoomplot.zoom(moveX=-moveX,moveY=-moveY)
+      NULL
   }
   zoomDyn <- function(buttons, x, y) {
     devset()
@@ -522,27 +540,31 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
     usr <<- par("usr")
     # cat("buttonPress:",buttons,"\n")
     mevent<-labelButton(buttons)
-    if(mevent=="scrollDown"){
-      eventEnv$onMouseMove <- zoomDyn
-      zoomDyn(buttons,x,y)
-    }else if(mevent=="scrollUp"){
-      eventEnv$onMouseMove <- zoomDyn
-      zoomDyn(buttons,x,y)
-    }else if(mevent=="middle"){
-      eventEnv$onMouseMove <- zoomDyn
-      zoomDyn(buttons,x,y)
-      # cat("Turn on zoomDyn\n")
-    }else if(mevent=="left"){
-      # cat("Turn on dragmousemove\n")
-      eventEnv$onMouseMove <- dragmousemove
-    }else if(mevent=="right"){
-      # cat("Closing...")
-      # return(invisible(1))
+    if(!is.null(mevent)){
+        if(mevent=="scrollDown"){
+            eventEnv$onMouseMove <- zoomDyn
+            zoomDyn(buttons,x,y)
+        }else if(mevent=="scrollUp"){
+            eventEnv$onMouseMove <- zoomDyn
+            zoomDyn(buttons,x,y)
+        }else if(mevent=="middle"){
+            eventEnv$onMouseMove <- zoomDyn
+            zoomDyn(buttons,x,y)
+            # cat("Turn on zoomDyn\n")
+        }else if(mevent=="left"){
+            # cat("Turn on dragmousemove\n")
+            eventEnv$onMouseMove <- dragmousemove
+        }else if(mevent=="right"){
+            # cat("Closing...")
+            # return(invisible(1))
+        }
     }
     NULL
   }
 
   mouseup <- function(buttons, x, y) {
+      # cat("mouseup:")
+      # print(buttons)
     eventEnv$onMouseMove <- NULL
     NULL
   }
