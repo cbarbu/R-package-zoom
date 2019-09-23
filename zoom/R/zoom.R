@@ -558,7 +558,13 @@ setCallBack<-function(..., xlim = NULL, ylim = NULL, xaxs = "r", yaxs = "r"){
             # cat("Closing...")
             # return(invisible(1))
         }
+    }else{ # likely scroll (up or down)
+        # cat("guess scroll")
+        # browser()
+        # eventEnv$onMouseMove <- zoomDyn
+        # zoomDyn(buttons,x,y)
     }
+
     NULL
   }
 
@@ -662,7 +668,7 @@ navigation.zoom<-function(...){
   if(names(dev.cur())=="windows"){
     zoom.in.out.mes<-"Right to zoom in, Middle or Hold Left + click right to zoom out"
   }else{
-    zoom.in.out.mes<-"Scroll to zoom in and out"
+    zoom.in.out.mes<-"Right to zoom in\nMiddle to zoom out" # "Scroll to zoom in and out"
   }
   message(zoom.in.out.mes,"\nHold left mouse button to move")
 
