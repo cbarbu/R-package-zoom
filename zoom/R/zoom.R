@@ -64,7 +64,7 @@ is.plot.window<-function(alst,fn){
   version<-sessionInfo()$R.version
   Maj<-as.numeric(version$major)
   Min<-as.numeric(version$minor)
-  if(Maj>=3 & Min>= 0.1){
+  if(Maj>3 || (Maj==3 & Min>= 0.1)){
     tmp <- all.equal("C_plot_window",alst[[1]]$name)
     attributes(tmp)$lims<-c(2,3)
   }else if(Maj==3 & Min <=0.1){
@@ -82,7 +82,7 @@ is.locator<-function(alst,fn){
   version<-sessionInfo()$R.version
   Maj<-as.numeric(version$major)
   Min<-as.numeric(version$minor)
-  if(Maj>=3 & Min>= 0.1){
+  if(Maj>3 || (Maj==3 & Min>= 0.1)){
     tmp <- all.equal("C_locator",alst[[1]]$name)
   }else if(Maj==3 & Min <=0.1){
     tmp <- (length(grep("locator",deparse(fn)))>0)
