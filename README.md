@@ -11,11 +11,11 @@ if you have any problem.
 
 Installation
 ------------
-Int most case, just copy/paste in R: 
+In most case, just copy/paste in R: 
 
 devtools::install_git("https://github.com/cbarbu/R-package-zoom",subdir="zoom")
 
-If issues you can try these other, plateform specific options : 
+If issues you can try plateform specific options : 
 
 ### Windows
 In the releases/ folder, download the zoom\*.zip (need to click on "View raw". Then install it from withing Rgui clicking on Packages - Install a binary package from a zip file".
