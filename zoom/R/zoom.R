@@ -59,8 +59,6 @@ usenew<-function(ancien,fact,new,point=NULL){
 # in case of need for change here, also check "locator" in zoomplot.zoom()
 is.plot.window<-function(alst,fn){
   ## for former versions of R
-  # tmp <- all.equal(.Primitive("plot.window"), fn)
-  # tmp <- (length(grep("plot.window",deparse(fn)))>0)
   version<-sessionInfo()$R.version
   Maj<-as.numeric(version$major)
   Min<-as.numeric(version$minor)
@@ -92,18 +90,18 @@ is.locator<-function(alst,fn){
   return(tmp)
 }
 
-# get the limits of the plot in argument
-getalst<-function(tmp=recordPlot()[[1]]){
-	for (i in seq(along = tmp)) {
-		fn <- tmp[[i]][[1]]
-		alst <- as.list(tmp[[i]][[2]])
-		tmp2<- is.plot.window(alst,fn)
-		if (is.logical(tmp2) && tmp2) {
-			alstwin<-alst
-		}
-	}
-	return(alstwin);
-}
+# # get the limits of the plot in argument
+# getalst<-function(tmp=recordPlot()[[1]]){
+# 	for (i in seq(along = tmp)) {
+# 		fn <- tmp[[i]][[1]]
+# 		alst <- as.list(tmp[[i]][[2]])
+# 		tmp2<- is.plot.window(alst,fn)
+# 		if (is.logical(tmp2) && tmp2) {
+# 			alstwin<-alst
+# 		}
+# 	}
+# 	return(alstwin);
+# }
 
 #' Central low level function of the zoom package.
 #'
@@ -349,6 +347,7 @@ orig.zoom<-function(orig){
 }
 
 #' @import tools
+#' @export
 print.zoom<-function(orig=NULL,dev=NULL,fileName=NULL,...){
   if(is.null(fileName)){
     fileName<-file.choose()
