@@ -15,9 +15,8 @@
 #' zm(), enters an interactive session to zoom and navigate the active plot. The development version, as well as binary releases can be found at https://github.com/cbarbu/R-package-zoom
 #'
 #' @aliases zoom-package zoom
-#' @name zoom-package
-#' @docType package
 #' @title The zoom Package
 #' @author Corentin M Barbu \email{corentin.barbu@@gmail.com}, with contributions from Sebastian Gibb \email{mail@@sebastiangibb.de}
 #' @keywords package
-NULL
+#' @keywords internal
+"_PACKAGE"
